@@ -1,130 +1,128 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { fetchTimeline } from '../services/api';
 
-const typeColor = {
-  past: { dot: '#FF9D00', line: 'rgba(255,157,0,0.3)', badge: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
-  present: { dot: '#10B981', line: 'rgba(16,185,129,0.3)', badge: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-  future: { dot: '#8B5CF6', line: 'rgba(139,92,246,0.3)', badge: 'bg-violet-500/20 text-violet-400 border-violet-500/30' },
+const TYPE_COLOR = {
+  past: '#FF9D00',
+  present: '#10B981',
+  future: '#8B5CF6',
 };
 
-const useInView = (opts = {}) => {
-  const ref = useRef(null);
-  const [v, setV] = useState(false);
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setV(true); }, { threshold: 0.15, ...opts });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, []);
-  return [ref, v];
-};
-
-const TimelineCard = ({ event, idx, side }) => {
-  const [ref, vis] = useInView();
-  const colors = typeColor[event.type] || typeColor.past;
-
+const TimelineCard = ({ event, idx }) => {
+  const color = TYPE_COLOR[event.type] || '#FF9D00';
   return (
-    <div
-      ref={ref}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: idx * 0.02 }}
       data-testid={`timeline-card-${idx}`}
-      className={`relative flex items-center gap-4 sm:gap-8 mb-8 ${side === 'right' ? 'flex-row-reverse' : ''}`}
+      style={{
+        width: '300px', flexShrink: 0, height: '420px',
+        background: 'rgba(255,255,255,0.025)',
+        border: '1px solid rgba(255,255,255,0.07)',
+        borderRadius: '20px',
+        padding: '28px',
+        display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+        position: 'relative', overflow: 'hidden',
+      }}
     >
-      {/* Card */}
-      <motion.div
-        className="flex-1 glass-card rounded-2xl p-5 max-w-sm"
-        initial={{ opacity: 0, x: side === 'right' ? 40 : -40 }}
-        animate={vis ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        style={{ borderColor: `${colors.dot}25` }}
-      >
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-2xl">{event.icon}</span>
-          <span className={`text-xs px-2 py-0.5 rounded-full border font-bold font-tamil-body ${colors.badge}`}>
-            {event.category}
-          </span>
-        </div>
-        <h3 className="text-white font-bold text-base mb-1 font-tamil-heading">{event.title_tamil}</h3>
-        <p className="text-zinc-500 text-xs mb-2 font-tamil-body">{event.title_english}</p>
-        <p className="text-zinc-400 text-sm leading-relaxed font-tamil-body">{event.description_tamil}</p>
-      </motion.div>
+      {/* Year badge */}
+      <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '6px 16px', borderRadius: '20px', background: `${color}15`, border: `1px solid ${color}35`, alignSelf: 'flex-start' }}>
+        <span style={{ fontFamily: "'Arima Madurai',serif", fontWeight: 900, fontSize: '22px', color: color, lineHeight: 1 }}>
+          {event.year > 0 ? event.year : `${Math.abs(event.year)} கி.மு`}
+        </span>
+      </div>
 
-      {/* Center year + dot */}
-      <motion.div
-        className="flex flex-col items-center shrink-0 relative z-10"
-        initial={{ opacity: 0, scale: 0 }}
-        animate={vis ? { opacity: 1, scale: 1 } : {}}
-        transition={{ duration: 0.4 }}
-      >
-        <div
-          className="w-12 h-12 rounded-full flex items-center justify-center text-xs font-black text-black font-tamil-body"
-          style={{ background: `radial-gradient(circle, ${colors.dot}, ${colors.dot}88)`, boxShadow: `0 0 20px ${colors.dot}60, 0 0 40px ${colors.dot}20` }}
-        >
-          {event.year > 0 ? (event.year >= 2024 ? event.year.toString().slice(2) : event.year > 999 ? event.year : event.year < 0 ? `${Math.abs(event.year)}BC` : event.year) : `${Math.abs(event.year)}BC`}
-        </div>
-        <span className="text-zinc-600 text-xs mt-1 font-tamil-body">{event.year > 0 ? event.year : `${Math.abs(event.year)} கி.மு`}</span>
-      </motion.div>
+      {/* Content */}
+      <div>
+        <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'sans-serif' }}>{event.category}</span>
+        <h3 style={{ fontFamily: "'Arima Madurai',serif", fontWeight: 700, fontSize: '20px', color: 'white', marginTop: '8px', lineHeight: 1.2 }}>{event.title_tamil}</h3>
+        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '11px', marginTop: '4px', fontFamily: 'sans-serif' }}>{event.title_english}</p>
+        <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '13px', lineHeight: 1.65, marginTop: '12px', fontFamily: "'Noto Sans Tamil',sans-serif" }}>
+          {event.description_tamil}
+        </p>
+      </div>
 
-      {/* Spacer for other side */}
-      <div className="flex-1 max-w-sm hidden sm:block" />
-    </div>
+      {/* Bottom color bar */}
+      <div style={{ height: '2px', background: `linear-gradient(90deg, ${color}, transparent)`, borderRadius: '1px' }} />
+
+      {/* BG number */}
+      <div style={{ position: 'absolute', bottom: '-10px', right: '-8px', fontFamily: "'Arima Madurai',serif", fontWeight: 900, fontSize: '80px', color: `${color}08`, lineHeight: 1, userSelect: 'none', pointerEvents: 'none' }}>
+        {String(idx + 1).padStart(2, '0')}
+      </div>
+    </motion.div>
   );
 };
 
 const Timeline = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [ref, visible] = useInView();
+  const containerRef = useRef(null);
 
   useEffect(() => {
     fetchTimeline().then(d => { setEvents(d); setLoading(false); }).catch(() => setLoading(false));
   }, []);
 
+  const CARD_W = 300;
+  const GAP = 20;
+  const PAD = 80;
+
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ['start start', 'end end'] });
+
+  // Calculate horizontal scroll distance
+  const totalCards = events.length;
+  const totalW = totalCards * (CARD_W + GAP) + PAD * 2;
+  const x = useTransform(scrollYProgress, [0, 1], [PAD, -(totalW - PAD * 3)]);
+  const progressX = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+
+  // Container height: more height = more scroll = easier to move through
+  const containerH = Math.max(totalCards * 180, 3000);
+
   return (
-    <section id="timeline" data-testid="timeline-section" ref={ref} className="relative py-24 px-4 sm:px-6" style={{ zIndex: 1 }}>
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <motion.div className="text-center mb-16"
-          initial={{ opacity: 0, y: 30 }} animate={visible ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7 }}>
-          <p className="text-orange-400 text-xs uppercase tracking-widest mb-3 font-tamil-body">காலவரிசை</p>
-          <h2 className="text-4xl sm:text-5xl font-black font-tamil-heading">
-            <span className="gradient-text">வரலாற்று பயணம்</span>
-          </h2>
-          <div className="section-divider" />
-          <p className="text-zinc-400 text-sm max-w-xl mx-auto mt-4 font-tamil-body">கி.மு 200 முதல் 2040 வரை விண்வெளி வரலாறு</p>
-        </motion.div>
+    <section id="timeline" data-testid="timeline-section" style={{ position: 'relative', zIndex: 1, background: 'rgba(0,0,0,0.5)' }}>
+      <div ref={containerRef} style={{ height: `${containerH}px`, position: 'relative' }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
+          {/* Section Header (stays fixed at top) */}
+          <div style={{ position: 'absolute', top: '60px', left: '80px', zIndex: 10 }}>
+            <p className="label-upper" style={{ marginBottom: '10px' }}>06 — TIMELINE</p>
+            <h2 className="text-editorial" style={{ fontSize: 'clamp(44px, 6vw, 80px)', color: 'white', lineHeight: 0.88 }}>
+              காலவரிசை<br /><span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '60%' }}>SCROLL</span>
+            </h2>
+          </div>
 
-        {/* Legend */}
-        <div className="flex justify-center gap-6 mb-12 flex-wrap">
-          {[['past', 'கடந்தகாலம்'], ['present', 'நிகழ்காலம்'], ['future', 'எதிர்காலம்']].map(([type, label]) => (
-            <div key={type} className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full" style={{ background: typeColor[type].dot, boxShadow: `0 0 8px ${typeColor[type].dot}` }} />
-              <span className="text-zinc-400 text-xs font-tamil-body">{label}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Timeline */}
-        {loading ? (
-          <div className="space-y-6">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="flex gap-8 items-center">
-                <div className="flex-1 h-24 glass-card rounded-2xl animate-pulse" />
-                <div className="w-12 h-12 rounded-full animate-pulse" style={{ background: 'rgba(255,157,0,0.2)' }} />
-                <div className="flex-1 h-24 hidden sm:block glass-card rounded-2xl animate-pulse opacity-0" />
+          {/* Legend */}
+          <div style={{ position: 'absolute', top: '80px', right: '80px', display: 'flex', gap: '20px', zIndex: 10 }}>
+            {[['past', 'கடந்தகாலம்'], ['present', 'நிகழ்காலம்'], ['future', 'எதிர்காலம்']].map(([type, label]) => (
+              <div key={type} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: TYPE_COLOR[type], boxShadow: `0 0 6px ${TYPE_COLOR[type]}` }} />
+                <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '11px', fontFamily: "'Noto Sans Tamil',sans-serif" }}>{label}</span>
               </div>
             ))}
           </div>
-        ) : (
-          <div className="relative">
-            {/* Vertical line */}
-            <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 hidden sm:block"
-              style={{ background: 'linear-gradient(to bottom, transparent, rgba(255,157,0,0.3) 10%, rgba(255,157,0,0.3) 90%, transparent)' }} />
 
-            {events.map((event, idx) => (
-              <TimelineCard key={event.id} event={event} idx={idx} side={idx % 2 === 0 ? 'left' : 'right'} />
-            ))}
+          {/* Progress bar */}
+          <div style={{ position: 'absolute', bottom: '48px', left: '80px', right: '80px', height: '1px', background: 'rgba(255,255,255,0.08)', zIndex: 10, borderRadius: '1px' }}>
+            <motion.div style={{ height: '100%', background: '#FF9D00', width: progressX, transformOrigin: 'left', borderRadius: '1px' }} />
           </div>
-        )}
+
+          {/* Scroll hint */}
+          <div style={{ position: 'absolute', bottom: '66px', right: '80px', zIndex: 10 }}>
+            <p style={{ color: 'rgba(255,255,255,0.2)', fontSize: '10px', fontFamily: 'sans-serif', letterSpacing: '0.2em', textTransform: 'uppercase' }}>SCROLL</p>
+          </div>
+
+          {/* Horizontal scrolling cards */}
+          {loading ? (
+            <div style={{ position: 'absolute', top: '50%', left: '80px', transform: 'translateY(-50%)', display: 'flex', gap: `${GAP}px` }}>
+              {[...Array(5)].map((_, i) => <div key={i} style={{ width: `${CARD_W}px`, height: '420px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }} />)}
+            </div>
+          ) : (
+            <motion.div
+              style={{ x, position: 'absolute', top: '50%', transform: 'translateY(-50%)', display: 'flex', gap: `${GAP}px`, width: 'max-content', paddingTop: '40px' }}
+            >
+              {events.map((ev, idx) => <TimelineCard key={ev.id} event={ev} idx={idx} />)}
+            </motion.div>
+          )}
+        </div>
       </div>
     </section>
   );

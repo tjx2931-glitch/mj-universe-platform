@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const navLinks = [
+const links = [
   { label: 'முகப்பு', href: '#hero' },
   { label: 'வான்வெளி', href: '#space' },
   { label: 'கோள்கள்', href: '#objects' },
@@ -12,16 +12,24 @@ const navLinks = [
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 50);
+    const fn = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', fn);
     return () => window.removeEventListener('scroll', fn);
   }, []);
 
-  const scrollTo = (href) => {
-    setMobileOpen(false);
+  const go = href => {
+    setOpen(false);
+    if (href.startsWith('#')) {
+      if (window.location.pathname !== '/') { navigate('/'); setTimeout(() => scrollTo(href), 200); }
+      else scrollTo(href);
+    }
+  };
+
+  const scrollTo = href => {
     const el = document.querySelector(href);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
@@ -29,67 +37,53 @@ const Navbar = () => {
   return (
     <nav
       data-testid="navbar"
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        background: scrolled ? 'rgba(3,3,3,0.92)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(20px)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(255,157,0,0.15)' : 'none',
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+        padding: scrolled ? '12px 48px' : '20px 48px',
+        background: scrolled ? 'rgba(0,0,0,0.88)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(24px)' : 'none',
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : 'none',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        transition: 'all 0.4s ease',
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-        {/* Logo */}
-        <button
-          data-testid="nav-logo"
-          onClick={() => scrollTo('#hero')}
-          className="flex items-center gap-2 group"
-        >
-          <Star size={18} className="text-orange-400" />
-          <span
-            className="text-2xl font-black gradient-text font-tamil-heading"
-            style={{ textShadow: '0 0 20px rgba(255,157,0,0.5)' }}
-          >
-            MJ
-          </span>
-          <span className="text-zinc-500 text-xs hidden sm:block font-tamil-body">விண்வெளி அனுபவம்</span>
-        </button>
+      {/* Logo */}
+      <button data-testid="nav-logo" onClick={() => go('#hero')}
+        style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <span style={{ fontFamily: "'Arima Madurai',serif", fontWeight: 900, fontSize: '24px', background: 'linear-gradient(135deg,#FF9D00,#FFD700)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>MJ</span>
+        <span style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.15)' }} />
+        <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '11px', letterSpacing: '0.2em', fontFamily: "'Noto Sans Tamil',sans-serif', 'sans-serif'" }}>விண்வெளி</span>
+      </button>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-1">
-          {navLinks.map(l => (
-            <button
-              key={l.href}
-              data-testid={`nav-${l.href.replace('#', '')}-link`}
-              onClick={() => scrollTo(l.href)}
-              className="px-3 py-2 text-sm text-zinc-400 hover:text-orange-400 transition-colors font-tamil-body rounded-md hover:bg-white/5"
-            >
-              {l.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Mobile Toggle */}
-        <button
-          data-testid="nav-mobile-toggle"
-          className="md:hidden text-zinc-400 hover:text-orange-400 transition-colors"
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
+      {/* Desktop nav */}
+      <div style={{ display: 'flex', gap: '32px' }} className="hidden md:flex">
+        {links.map(l => (
+          <button key={l.href} data-testid={`nav-${l.href.replace('#', '')}-link`}
+            onClick={() => go(l.href)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.45)', fontSize: '12px', letterSpacing: '0.08em', fontFamily: "'Noto Sans Tamil',sans-serif", padding: '4px 0', transition: 'color 0.2s', borderBottom: '1px solid transparent' }}
+            onMouseOver={e => { e.currentTarget.style.color = '#FF9D00'; e.currentTarget.style.borderBottomColor = 'rgba(255,157,0,0.3)'; }}
+            onMouseOut={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.45)'; e.currentTarget.style.borderBottomColor = 'transparent'; }}>
+            {l.label}
+          </button>
+        ))}
       </div>
 
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div
-          data-testid="nav-mobile-menu"
-          className="md:hidden border-t border-white/10 py-2"
-          style={{ background: 'rgba(3,3,3,0.97)', backdropFilter: 'blur(20px)' }}
-        >
-          {navLinks.map(l => (
-            <button
-              key={l.href}
-              onClick={() => scrollTo(l.href)}
-              className="block w-full text-left px-6 py-3 text-zinc-300 hover:text-orange-400 hover:bg-white/5 transition-colors font-tamil-body"
-            >
+      {/* Mobile toggle */}
+      <button data-testid="nav-mobile-toggle"
+        onClick={() => setOpen(!open)}
+        style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.6)', flexDirection: 'column', gap: '5px', padding: '4px' }}
+        className="flex md:hidden flex-col">
+        <span style={{ width: '22px', height: '1px', background: 'currentColor', display: 'block' }} />
+        <span style={{ width: '14px', height: '1px', background: 'currentColor', display: 'block' }} />
+        <span style={{ width: '22px', height: '1px', background: 'currentColor', display: 'block' }} />
+      </button>
+
+      {/* Mobile menu */}
+      {open && (
+        <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'rgba(0,0,0,0.97)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '16px 48px' }}>
+          {links.map(l => (
+            <button key={l.href} onClick={() => go(l.href)}
+              style={{ display: 'block', width: '100%', textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.5)', fontSize: '14px', padding: '12px 0', fontFamily: "'Noto Sans Tamil',sans-serif", borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
               {l.label}
             </button>
           ))}

@@ -330,6 +330,50 @@ async def astrology_calculate(data: AstrologyInput):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@api_router.get("/live-astronomy")
+async def get_live_astronomy():
+    import math, random
+    now = datetime.now(timezone.utc)
+    ref = datetime(2000, 1, 6, 18, 14, tzinfo=timezone.utc)
+    days = (now - ref).total_seconds() / 86400
+    phase_days = days % 29.53059
+    illumination = round(50 - 50 * math.cos(2 * math.pi * phase_days / 29.53059), 1)
+    if phase_days < 1.85: phase_name = "அமாவாசை"
+    elif phase_days < 7.38: phase_name = "வளர்பிறை"
+    elif phase_days < 9.22: phase_name = "முதல் கால்"
+    elif phase_days < 14.77: phase_name = "வளர்பிறை பூர்ணிமை"
+    elif phase_days < 16.61: phase_name = "பௌர்ணமி"
+    elif phase_days < 22.15: phase_name = "தேய்பிறை"
+    elif phase_days < 23.99: phase_name = "கடை கால்"
+    else: phase_name = "தேய்பிறை கடை"
+    upcoming = await db.timeline_events.find({"type": "future"}, {"_id": 0}).sort("year", 1).limit(3).to_list(3)
+    facts = [
+        {"tamil": "சூரியனிலிருந்து ஒளி பூமியை அடைய 8 நிமிடங்கள் ஆகும்", "english": "Light from the Sun takes 8 minutes to reach Earth"},
+        {"tamil": "பால்வெளியில் 200–400 பில்லியன் நட்சத்திரங்கள் உள்ளன", "english": "Milky Way contains 200–400 billion stars"},
+        {"tamil": "வியாழன் 1,300 பூமிகளை தன்னுள் அடக்கலாம்", "english": "Jupiter could fit 1,300 Earths inside it"},
+        {"tamil": "ஒரு நட்சத்திரம் சராசரியாக 10 பில்லியன் ஆண்டுகள் வாழும்", "english": "An average star lives for about 10 billion years"},
+        {"tamil": "நிலவு ஒவ்வொரு ஆண்டும் 3.8 செமீ பூமியிலிருந்து விலகுகிறது", "english": "The Moon drifts 3.8 cm further from Earth each year"},
+    ]
+    return {"lunar": {"phase_name": phase_name, "phase_days": round(phase_days, 1), "illumination": illumination}, "upcoming_events": upcoming, "space_fact": random.choice(facts)}
+
+@api_router.get("/objects/{item_id}")
+async def get_object_by_id(item_id: str):
+    doc = await db.astronomy_objects.find_one({"id": item_id}, {"_id": 0})
+    if not doc: raise HTTPException(status_code=404, detail="Not found")
+    return doc
+
+@api_router.get("/gallery/{item_id}")
+async def get_gallery_item_by_id(item_id: str):
+    doc = await db.gallery_items.find_one({"id": item_id}, {"_id": 0})
+    if not doc: raise HTTPException(status_code=404, detail="Not found")
+    return doc
+
+@api_router.get("/space/event/{item_id}")
+async def get_space_event_by_id(item_id: str):
+    doc = await db.space_content.find_one({"id": item_id}, {"_id": 0})
+    if not doc: raise HTTPException(status_code=404, detail="Not found")
+    return doc
+
 app.include_router(api_router)
 
 app.add_middleware(

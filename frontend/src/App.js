@@ -1,35 +1,38 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import StarField from './components/StarField';
 import Navbar from './components/Navbar';
-import HeroSection from './components/HeroSection';
-import SpaceSection from './components/SpaceSection';
-import AstronomyObjects from './components/AstronomyObjects';
-import Timeline from './components/Timeline';
-import AstrologyCalculator from './components/AstrologyCalculator';
-import Gallery from './components/Gallery';
+import HomePage from './pages/HomePage';
 import './App.css';
+
+const ObjectDetail = lazy(() => import('./pages/ObjectDetail'));
+const GalleryDetail = lazy(() => import('./pages/GalleryDetail'));
+
+const Loader = () => (
+  <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000' }}>
+    <div style={{ textAlign: 'center' }}>
+      <p style={{ fontSize: '48px', fontFamily: "'Arima Madurai',serif", fontWeight: 900, background: 'linear-gradient(135deg,#FF9D00,#FFD700)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>MJ</p>
+      <p style={{ color: 'rgba(255,157,0,0.6)', fontSize: '12px', letterSpacing: '0.3em', fontFamily: "'Noto Sans Tamil',sans-serif", marginTop: '8px' }}>ஏற்றுகிறது...</p>
+    </div>
+  </div>
+);
 
 function App() {
   return (
-    <div className="min-h-screen" style={{ background: '#030303' }}>
-      <StarField />
-      <Navbar />
-      <main>
-        <HeroSection />
-        <SpaceSection />
-        <AstronomyObjects />
-        <Timeline />
-        <AstrologyCalculator />
-        <Gallery />
-      </main>
-      <footer className="border-t border-white/10 py-10 text-center" style={{ background: 'rgba(0,0,0,0.8)' }}>
-        <div className="max-w-4xl mx-auto px-6">
-          <p className="text-2xl font-bold gradient-text font-tamil-heading mb-2">MJ</p>
-          <p className="text-zinc-500 text-sm font-tamil-body mb-1">விண்வெளியை உணருங்கள் • கடந்தது • நிகழ்காலம் • எதிர்காலம்</p>
-          <p className="text-zinc-600 text-xs">© 2024 MJ – விண்வெளி அனுபவம் • NASA, ISRO & ESA Data</p>
-        </div>
-      </footer>
-    </div>
+    <BrowserRouter>
+      <div style={{ background: '#000', minHeight: '100vh' }}>
+        <StarField />
+        <Navbar />
+        <Suspense fallback={<Loader />}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/object/:id" element={<ObjectDetail />} />
+            <Route path="/gallery/:id" element={<GalleryDetail />} />
+          </Routes>
+        </Suspense>
+      </div>
+    </BrowserRouter>
   );
 }
 

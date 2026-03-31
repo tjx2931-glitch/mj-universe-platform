@@ -1,169 +1,129 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { X, ZoomIn } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { fetchObjects } from '../services/api';
 
-const typeColors = {
-  'நட்சத்திரம்': 'text-yellow-400 bg-yellow-400/10',
-  'துணைக்கோள்': 'text-blue-400 bg-blue-400/10',
-  'கோள்': 'text-orange-400 bg-orange-400/10',
-  'நட்சத்திர தொகுப்பு': 'text-violet-400 bg-violet-400/10',
-  'மங்கலம்': 'text-purple-400 bg-purple-400/10',
-  'நட்சத்திர குழு': 'text-cyan-400 bg-cyan-400/10',
+const typeAccent = {
+  'நட்சத்திரம்': '#FFD700',
+  'துணைக்கோள்': '#64B5F6',
+  'கோள்': '#FF9D00',
+  'நட்சத்திர தொகுப்பு': '#CE93D8',
+  'மங்கலம்': '#AB47BC',
+  'நட்சத்திர குழு': '#4DD0E1',
 };
 
 const useInView = () => {
   const ref = useRef(null);
   const [v, setV] = useState(false);
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setV(true); }, { threshold: 0.1 });
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setV(true); }, { threshold: 0.08 });
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
   return [ref, v];
 };
 
-const ObjectCard = ({ obj, idx, onClick }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 30 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: idx * 0.05, duration: 0.5 }}
-    data-testid={`object-card-${idx}`}
-    onClick={() => onClick(obj)}
-    className="glass-card rounded-2xl overflow-hidden cursor-pointer group relative"
-  >
-    {/* Image */}
-    <div className="relative h-48 overflow-hidden">
+// Grid layout patterns
+const LAYOUT = [
+  'col-span-4 row-span-2', 'col-span-4', 'col-span-4',
+  'col-span-3', 'col-span-5 row-span-2', 'col-span-4',
+  'col-span-4', 'col-span-4', 'col-span-4 row-span-2',
+  'col-span-4', 'col-span-4', 'col-span-4',
+  'col-span-3', 'col-span-3', 'col-span-3', 'col-span-3',
+];
+
+const ObjectCard = ({ obj, idx }) => {
+  const navigate = useNavigate();
+  const accent = typeAccent[obj.type] || '#FF9D00';
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: idx * 0.04 }}
+      data-testid={`object-card-${idx}`}
+      onClick={() => navigate(`/object/${obj.id}`)}
+      style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', cursor: 'pointer', minHeight: '220px', background: '#0A0A0A' }}
+      className="group"
+    >
       <img
         src={obj.image_url}
         alt={obj.name_english}
-        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.7s ease' }}
+        className="img-hover"
         onError={e => { e.target.src = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&q=60'; }}
       />
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(3,3,3,0.95) 10%, rgba(3,3,3,0.2) 70%)' }} />
-      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-        <ZoomIn size={16} className="text-orange-400" />
-      </div>
-    </div>
 
-    {/* Content */}
-    <div className="p-4">
-      <span className={`text-xs px-2 py-0.5 rounded-full font-bold font-tamil-body ${typeColors[obj.type] || 'text-zinc-400 bg-zinc-400/10'}`}>{obj.type}</span>
-      <h3 className="text-xl font-black text-white mt-2 mb-0.5 font-tamil-heading"
-          style={{ textShadow: `0 0 15px ${obj.color || '#FF9D00'}40` }}>
-        {obj.name_tamil}
-      </h3>
-      <p className="text-zinc-500 text-xs mb-2 font-tamil-body">{obj.name_english}</p>
-      <div className="flex gap-3 text-xs text-zinc-500 font-tamil-body">
-        <span>📏 {obj.distance}</span>
-      </div>
-    </div>
+      {/* Gradient overlay */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.3) 60%, transparent 100%)', transition: 'opacity 0.3s' }} />
 
-    {/* Colored bottom border */}
-    <div className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-         style={{ background: `linear-gradient(90deg, transparent, ${obj.color || '#FF9D00'}, transparent)` }} />
-  </motion.div>
-);
+      {/* Hover border */}
+      <div style={{ position: 'absolute', inset: 0, borderRadius: '12px', border: `1px solid ${accent}00`, transition: 'border-color 0.3s', pointerEvents: 'none' }}
+        className="group-hover:border-orange-500/40" />
 
-const ObjectModal = ({ obj, onClose }) => (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    className="fixed inset-0 z-50 flex items-center justify-center p-4"
-    style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)' }}
-    onClick={onClose}
-  >
-    <motion.div
-      initial={{ scale: 0.9, y: 30 }}
-      animate={{ scale: 1, y: 0 }}
-      exit={{ scale: 0.9, y: 30 }}
-      data-testid="object-modal"
-      className="glass-card rounded-3xl overflow-hidden max-w-lg w-full"
-      style={{ border: `1px solid ${obj.color || '#FF9D00'}30`, boxShadow: `0 0 40px ${obj.color || '#FF9D00'}20` }}
-      onClick={e => e.stopPropagation()}
-    >
-      <div className="relative h-56">
-        <img src={obj.image_url} alt={obj.name_english} className="w-full h-full object-cover"
-          onError={e => { e.target.src = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&q=60'; }} />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(3,3,3,0.95) 0%, transparent 60%)' }} />
-        <button onClick={onClose} data-testid="object-modal-close"
-          className="absolute top-4 right-4 text-zinc-400 hover:text-white bg-black/50 rounded-full p-1.5 transition-colors">
-          <X size={16} />
-        </button>
+      {/* Content */}
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px' }}>
+        <span style={{ fontSize: '10px', color: accent, letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: "'Noto Sans Tamil',sans-serif", display: 'block', marginBottom: '6px' }}>{obj.type}</span>
+        <h3 style={{ fontFamily: "'Arima Madurai',serif", fontWeight: 900, fontSize: 'clamp(22px, 3vw, 34px)', color: 'white', lineHeight: 0.95, margin: 0 }}>{obj.name_tamil}</h3>
+        <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '11px', fontFamily: 'sans-serif', marginTop: '4px' }}>{obj.name_english}</p>
       </div>
-      <div className="p-6">
-        <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${typeColors[obj.type] || 'text-zinc-400 bg-zinc-400/10'}`}>{obj.type}</span>
-        <h2 className="text-3xl font-black text-white mt-2 font-tamil-heading">{obj.name_tamil}</h2>
-        <p className="text-zinc-400 text-sm mb-4 font-tamil-body">{obj.name_english}</p>
-        <p className="text-zinc-300 text-sm leading-relaxed mb-4 font-tamil-body">{obj.description_tamil}</p>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl p-3" style={{ background: 'rgba(255,157,0,0.07)', border: '1px solid rgba(255,157,0,0.15)' }}>
-            <p className="text-orange-400 text-xs mb-1 font-tamil-body">தொலைவு</p>
-            <p className="text-white text-sm font-semibold font-tamil-body">{obj.distance}</p>
-          </div>
-          <div className="rounded-xl p-3" style={{ background: 'rgba(255,157,0,0.07)', border: '1px solid rgba(255,157,0,0.15)' }}>
-            <p className="text-orange-400 text-xs mb-1 font-tamil-body">அளவு</p>
-            <p className="text-white text-sm font-semibold font-tamil-body">{obj.size}</p>
-          </div>
-        </div>
-        <div className="mt-4 p-3 rounded-xl" style={{ background: 'rgba(255,215,0,0.06)', border: '1px solid rgba(255,215,0,0.15)' }}>
-          <p className="text-amber-400 text-xs mb-1 font-tamil-body">சுவாரஸ்ய தகவல்</p>
-          <p className="text-zinc-300 text-sm font-tamil-body">{obj.fun_fact_tamil}</p>
-        </div>
-      </div>
+
+      {/* Bottom glow on hover */}
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '2px', background: `linear-gradient(90deg, transparent, ${accent}, transparent)`, opacity: 0, transition: 'opacity 0.3s', pointerEvents: 'none' }}
+        className="group-hover:opacity-100" />
     </motion.div>
-  </motion.div>
-);
+  );
+};
 
 const AstronomyObjects = () => {
   const [objects, setObjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(null);
   const [ref, visible] = useInView();
 
   useEffect(() => {
-    fetchObjects().then(data => { setObjects(data); setLoading(false); }).catch(() => setLoading(false));
+    fetchObjects().then(d => { setObjects(d); setLoading(false); }).catch(() => setLoading(false));
   }, []);
 
   return (
-    <section id="objects" data-testid="objects-section" ref={ref} className="relative py-24 px-4 sm:px-6" style={{ zIndex: 1 }}>
-      <div className="max-w-7xl mx-auto">
-        <motion.div className="text-center mb-14"
-          initial={{ opacity: 0, y: 30 }} animate={visible ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7 }}>
-          <p className="text-orange-400 text-xs uppercase tracking-widest mb-3 font-tamil-body">விண்வெளி பொருட்கள்</p>
-          <h2 className="text-4xl sm:text-5xl font-black font-tamil-heading">
-            <span className="gradient-text">கோள்கள் & நட்சத்திரங்கள்</span>
+    <section id="objects" data-testid="objects-section" ref={ref} style={{ position: 'relative', zIndex: 1, padding: '100px 80px' }}>
+      {/* Header */}
+      <motion.div initial={{ opacity: 0, y: 30 }} animate={visible ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7 }}
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '48px', flexWrap: 'wrap', gap: '24px' }}>
+        <div>
+          <p className="label-upper" style={{ marginBottom: '14px' }}>05 — விண்வெளி பொருட்கள்</p>
+          <h2 className="text-editorial" style={{ fontSize: 'clamp(48px, 7vw, 90px)', color: 'white' }}>
+            CELESTIAL<br /><span className="gradient-gold">OBJECTS</span>
           </h2>
-          <div className="section-divider" />
-          <p className="text-zinc-400 text-sm max-w-xl mx-auto mt-4 font-tamil-body">சூரிய குடும்பம் முதல் ஆழமான விண்வெளி வரை</p>
-        </motion.div>
+        </div>
+        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '13px', fontFamily: "'Noto Sans Tamil',sans-serif", maxWidth: '260px', textAlign: 'right', lineHeight: 1.7 }}>
+          கிரகங்களை கிளிக் செய்து விரிவான தகவல்கள் அறியுங்கள்
+        </p>
+      </motion.div>
 
-        {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-            {Array.from({ length: 8 }).map((_, i) => <div key={i} className="glass-card rounded-2xl h-64 animate-pulse" />)}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-            {objects.map((obj, idx) => (
-              <ObjectCard key={obj.id} obj={obj} idx={idx} onClick={setSelected} />
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Modal */}
-      {selected && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)' }}
-          onClick={() => setSelected(null)}
-        >
-          <ObjectModal obj={selected} onClose={() => setSelected(null)} />
-        </motion.div>
+      {/* Masonry grid */}
+      {loading ? (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '8px' }}>
+          {[...Array(8)].map((_, i) => <div key={i} style={{ gridColumn: 'span 3', height: '220px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }} />)}
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '8px', gridAutoRows: '220px' }}>
+          {objects.map((obj, idx) => {
+            // Define layout spans
+            const layouts = [
+              { colSpan: 4, rowSpan: 2 }, { colSpan: 4, rowSpan: 1 }, { colSpan: 4, rowSpan: 1 },
+              { colSpan: 3, rowSpan: 1 }, { colSpan: 5, rowSpan: 2 }, { colSpan: 4, rowSpan: 1 },
+              { colSpan: 4, rowSpan: 1 }, { colSpan: 4, rowSpan: 1 }, { colSpan: 4, rowSpan: 2 },
+              { colSpan: 4, rowSpan: 1 }, { colSpan: 4, rowSpan: 1 }, { colSpan: 3, rowSpan: 1 },
+              { colSpan: 3, rowSpan: 1 }, { colSpan: 3, rowSpan: 1 }, { colSpan: 3, rowSpan: 1 }, { colSpan: 3, rowSpan: 1 },
+            ];
+            const layout = layouts[idx % layouts.length];
+            return (
+              <div key={obj.id} style={{ gridColumn: `span ${layout.colSpan}`, gridRow: `span ${layout.rowSpan}` }}>
+                <ObjectCard obj={obj} idx={idx} />
+              </div>
+            );
+          })}
+        </div>
       )}
     </section>
   );

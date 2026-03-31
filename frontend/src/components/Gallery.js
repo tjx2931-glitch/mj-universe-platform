@@ -1,171 +1,154 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ZoomIn, Camera } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { X } from 'lucide-react';
 import { fetchGallery } from '../services/api';
 
 const useInView = () => {
   const ref = useRef(null);
   const [v, setV] = useState(false);
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setV(true); }, { threshold: 0.1 });
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setV(true); }, { threshold: 0.08 });
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
   return [ref, v];
 };
 
-const GalleryCard = ({ item, idx, onClick }) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.95 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ delay: idx * 0.05, duration: 0.5 }}
-    data-testid={`gallery-card-${idx}`}
-    onClick={() => onClick(item)}
-    className="relative overflow-hidden rounded-2xl cursor-pointer group"
-    style={{ aspectRatio: idx % 5 === 0 || idx % 5 === 3 ? '16/9' : '4/3' }}
-  >
-    <img
-      src={item.image_url}
-      alt={item.title_english}
-      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-      onError={e => { e.target.src = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&q=60'; }}
-      loading="lazy"
-    />
+// Editorial grid layout
+const GRID_LAYOUTS = [
+  { col: '1 / 8', row: '1 / 3' },
+  { col: '8 / 13', row: '1 / 2' },
+  { col: '8 / 13', row: '2 / 3' },
+  { col: '1 / 5', row: '3 / 4' },
+  { col: '5 / 9', row: '3 / 5' },
+  { col: '9 / 13', row: '3 / 4' },
+  { col: '1 / 5', row: '4 / 5' },
+  { col: '9 / 13', row: '4 / 5' },
+  { col: '1 / 6', row: '5 / 7' },
+  { col: '6 / 10', row: '5 / 6' },
+  { col: '10 / 13', row: '5 / 6' },
+  { col: '6 / 13', row: '6 / 7' },
+];
 
-    {/* Overlay */}
-    <div className="absolute inset-0 transition-opacity duration-300"
-      style={{ background: 'linear-gradient(to top, rgba(3,3,3,0.9) 0%, rgba(3,3,3,0.2) 60%, transparent 100%)', opacity: 0.7 }} />
-    <div className="absolute inset-0 flex items-end p-4">
-      <div className="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-        <span className="text-orange-400/80 text-xs font-bold font-tamil-body block mb-1">{item.category}</span>
-        <h3 className="text-white font-bold text-sm font-tamil-heading leading-tight">{item.title_tamil}</h3>
-        <p className="text-zinc-400 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-tamil-body mt-1 line-clamp-2">{item.description_tamil}</p>
-      </div>
-    </div>
+const GalleryCard = ({ item, idx, onClick }) => {
+  const layout = GRID_LAYOUTS[idx % GRID_LAYOUTS.length];
+  const rotation = idx % 3 === 1 ? '0.8deg' : idx % 3 === 2 ? '-0.6deg' : '0deg';
 
-    {/* Hover icon */}
-    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/50 p-1.5 rounded-lg">
-      <ZoomIn size={14} className="text-orange-400" />
-    </div>
-
-    {/* Neon border on hover */}
-    <div className="absolute inset-0 rounded-2xl border border-transparent group-hover:border-orange-500/40 transition-colors duration-300 pointer-events-none" />
-  </motion.div>
-);
-
-const GalleryModal = ({ item, items, onClose, onNext, onPrev }) => (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    className="fixed inset-0 z-50 flex items-center justify-center p-4"
-    style={{ background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(20px)' }}
-    onClick={onClose}
-  >
+  return (
     <motion.div
-      initial={{ scale: 0.9 }}
-      animate={{ scale: 1 }}
-      exit={{ scale: 0.9 }}
-      data-testid="gallery-modal"
-      className="relative max-w-3xl w-full glass-card rounded-3xl overflow-hidden"
-      style={{ border: '1px solid rgba(255,157,0,0.2)' }}
-      onClick={e => e.stopPropagation()}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: idx * 0.04 }}
+      data-testid={`gallery-card-${idx}`}
+      onClick={() => onClick(item)}
+      style={{
+        gridColumn: layout.col, gridRow: layout.row,
+        position: 'relative', overflow: 'hidden', borderRadius: '10px',
+        cursor: 'pointer', transform: `rotate(${rotation})`,
+        transition: 'transform 0.4s ease',
+      }}
+      onMouseOver={e => { e.currentTarget.style.transform = 'rotate(0deg) scale(1.02)'; e.currentTarget.style.zIndex = '5'; }}
+      onMouseOut={e => { e.currentTarget.style.transform = `rotate(${rotation})`; e.currentTarget.style.zIndex = '1'; }}
     >
-      <div className="relative" style={{ maxHeight: '60vh' }}>
-        <img
-          src={item.image_url}
-          alt={item.title_english}
-          className="w-full object-contain"
-          style={{ maxHeight: '60vh' }}
-          onError={e => { e.target.src = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800&q=80'; }}
-        />
-        <div className="absolute top-4 right-4">
-          <button onClick={onClose} data-testid="gallery-modal-close"
-            className="bg-black/70 hover:bg-black/90 p-2 rounded-full text-zinc-400 hover:text-white transition-colors">
-            <X size={18} />
-          </button>
-        </div>
-      </div>
-
-      <div className="p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <span className="text-orange-400 text-xs font-bold font-tamil-body">{item.category}</span>
-            <h3 className="text-white text-xl font-black font-tamil-heading mt-1">{item.title_tamil}</h3>
-            <p className="text-zinc-500 text-sm font-tamil-body">{item.title_english}</p>
-          </div>
-          <div className="text-right shrink-0">
-            <div className="flex items-center gap-1 text-zinc-500 text-xs font-tamil-body">
-              <Camera size={11} />
-              <span>{item.photographer}</span>
-            </div>
-          </div>
-        </div>
-        <p className="text-zinc-400 text-sm mt-3 leading-relaxed font-tamil-body">{item.description_tamil}</p>
-      </div>
-
-      {/* Nav */}
-      <div className="absolute top-1/2 -translate-y-1/2 left-4">
-        <button onClick={onPrev} data-testid="gallery-prev-btn"
-          className="bg-black/70 hover:bg-orange-500/20 p-2 rounded-full text-zinc-400 hover:text-orange-400 transition-all">
-          ←
-        </button>
-      </div>
-      <div className="absolute top-1/2 -translate-y-1/2 right-4">
-        <button onClick={onNext} data-testid="gallery-next-btn"
-          className="bg-black/70 hover:bg-orange-500/20 p-2 rounded-full text-zinc-400 hover:text-orange-400 transition-all">
-          →
-        </button>
+      <img
+        src={item.image_url}
+        alt={item.title_english}
+        style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s ease' }}
+        onError={e => { e.target.src = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=600&q=60'; }}
+        loading="lazy"
+      />
+      {/* Overlay */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%)', opacity: 0.8, transition: 'opacity 0.3s' }} />
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '16px 14px', transform: 'translateY(4px)', transition: 'transform 0.3s' }}>
+        <span style={{ color: '#FF9D00', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', fontFamily: 'sans-serif' }}>{item.category}</span>
+        <p style={{ color: 'white', fontSize: '14px', fontWeight: 700, fontFamily: "'Arima Madurai',serif", lineHeight: 1.2, marginTop: '3px' }}>{item.title_tamil}</p>
       </div>
     </motion.div>
-  </motion.div>
-);
+  );
+};
+
+const GalleryModal = ({ item, onClose }) => {
+  useEffect(() => {
+    const fn = e => e.key === 'Escape' && onClose();
+    document.addEventListener('keydown', fn);
+    return () => document.removeEventListener('keydown', fn);
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(16px)' }}
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.94, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.94 }}
+        data-testid="gallery-modal"
+        style={{ maxWidth: '900px', width: '100%', background: '#080808', borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}
+        onClick={e => e.stopPropagation()}
+      >
+        <div style={{ position: 'relative', maxHeight: '60vh' }}>
+          <img src={item.image_url} alt={item.title_english}
+            style={{ width: '100%', maxHeight: '60vh', objectFit: 'cover', display: 'block' }}
+            onError={e => { e.target.src = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=900&q=80'; }} />
+          <button data-testid="gallery-modal-close" onClick={onClose}
+            style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(0,0,0,0.7)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white', backdropFilter: 'blur(8px)' }}>
+            <X size={16} />
+          </button>
+        </div>
+        <div style={{ padding: '28px 32px' }}>
+          <span style={{ color: '#FF9D00', fontSize: '10px', letterSpacing: '0.18em', textTransform: 'uppercase', fontFamily: 'sans-serif' }}>{item.category}</span>
+          <h3 style={{ fontFamily: "'Arima Madurai',serif", fontWeight: 900, fontSize: '28px', color: 'white', margin: '6px 0 4px' }}>{item.title_tamil}</h3>
+          <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '13px', fontFamily: 'sans-serif', marginBottom: '14px' }}>{item.title_english}</p>
+          <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '14px', lineHeight: 1.7, fontFamily: "'Noto Sans Tamil',sans-serif" }}>{item.description_tamil}</p>
+          <p style={{ color: 'rgba(255,255,255,0.2)', fontSize: '11px', fontFamily: 'sans-serif', marginTop: '16px' }}>Photo: {item.photographer}</p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
 
 const Gallery = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
   const [ref, visible] = useInView();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchGallery().then(d => { setItems(d); setLoading(false); }).catch(() => setLoading(false));
   }, []);
 
-  const selectedIdx = selected ? items.findIndex(i => i.id === selected.id) : -1;
-  const goPrev = () => { const i = (selectedIdx - 1 + items.length) % items.length; setSelected(items[i]); };
-  const goNext = () => { const i = (selectedIdx + 1) % items.length; setSelected(items[i]); };
-
   return (
-    <section id="gallery" data-testid="gallery-section" ref={ref} className="relative py-24 px-4 sm:px-6" style={{ zIndex: 1 }}>
-      <div className="max-w-7xl mx-auto">
-        <motion.div className="text-center mb-14"
-          initial={{ opacity: 0, y: 30 }} animate={visible ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7 }}>
-          <p className="text-orange-400 text-xs uppercase tracking-widest mb-3 font-tamil-body">விண்வெளி கோட்சேரி</p>
-          <h2 className="text-4xl sm:text-5xl font-black font-tamil-heading">
-            <span className="gradient-text">விண்வெளி படங்கள்</span>
+    <section id="gallery" data-testid="gallery-section" ref={ref} style={{ position: 'relative', zIndex: 1, padding: '100px 80px' }}>
+      {/* Header */}
+      <motion.div initial={{ opacity: 0, y: 30 }} animate={visible ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7 }}
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '48px', flexWrap: 'wrap', gap: '24px' }}>
+        <div>
+          <p className="label-upper" style={{ marginBottom: '14px' }}>08 — கோட்சேரி</p>
+          <h2 className="text-editorial" style={{ fontSize: 'clamp(48px, 7vw, 90px)', color: 'white' }}>
+            SPACE<br /><span className="gradient-gold">GALLERY</span>
           </h2>
-          <div className="section-divider" />
-          <p className="text-zinc-400 text-sm max-w-xl mx-auto mt-4 font-tamil-body">NASA, ESA மற்றும் விண்வெளி ஆய்வாளர்களின் உண்மையான படங்கள்</p>
-        </motion.div>
+        </div>
+        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '13px', fontFamily: "'Noto Sans Tamil',sans-serif", maxWidth: '260px', textAlign: 'right', lineHeight: 1.7 }}>
+          NASA, ESA மற்றும் விண்வெளி ஆய்வாளர்களின் உண்மையான படங்கள்
+        </p>
+      </motion.div>
 
-        {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {Array.from({ length: 8 }).map((_, i) => <div key={i} className="glass-card rounded-2xl h-48 animate-pulse" />)}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {items.map((item, idx) => (
-              <GalleryCard key={item.id} item={item} idx={idx} onClick={setSelected} />
-            ))}
-          </div>
-        )}
-      </div>
+      {loading ? (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gridAutoRows: '180px', gap: '8px' }}>
+          {[...Array(6)].map((_, i) => <div key={i} style={{ gridColumn: 'span 4', background: 'rgba(255,255,255,0.03)', borderRadius: '10px' }} />)}
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gridAutoRows: '180px', gap: '8px' }}>
+          {items.slice(0, 12).map((item, idx) => (
+            <GalleryCard key={item.id} item={item} idx={idx} onClick={setSelected} />
+          ))}
+        </div>
+      )}
 
-      {/* Modal */}
       <AnimatePresence>
-        {selected && (
-          <GalleryModal item={selected} items={items} onClose={() => setSelected(null)} onNext={goNext} onPrev={goPrev} />
-        )}
+        {selected && <GalleryModal item={selected} onClose={() => setSelected(null)} />}
       </AnimatePresence>
     </section>
   );

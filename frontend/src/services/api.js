@@ -1,15 +1,16 @@
-const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const BASE = process.env.REACT_APP_BACKEND_URL;
 
-export const fetchSpacePast = () => fetch(`${BASE_URL}/api/space/past`).then(r => r.json());
-export const fetchSpacePresent = () => fetch(`${BASE_URL}/api/space/present`).then(r => r.json());
-export const fetchSpaceFuture = () => fetch(`${BASE_URL}/api/space/future`).then(r => r.json());
-export const fetchObjects = () => fetch(`${BASE_URL}/api/objects`).then(r => r.json());
-export const fetchTimeline = () => fetch(`${BASE_URL}/api/timeline`).then(r => r.json());
-export const fetchGallery = () => fetch(`${BASE_URL}/api/gallery`).then(r => r.json());
+const get = url => fetch(`${BASE}${url}`).then(r => r.json());
+const post = (url, body) => fetch(`${BASE}${url}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(r => r.json());
 
-export const calculateAstrology = (data) =>
-  fetch(`${BASE_URL}/api/astrology/calculate`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  }).then(r => r.json());
+export const fetchSpacePast = () => get('/api/space/past');
+export const fetchSpacePresent = () => get('/api/space/present');
+export const fetchSpaceFuture = () => get('/api/space/future');
+export const fetchObjects = () => get('/api/objects');
+export const fetchTimeline = () => get('/api/timeline');
+export const fetchGallery = () => get('/api/gallery');
+export const fetchLiveAstronomy = () => get('/api/live-astronomy');
+export const fetchObjectById = id => get(`/api/objects/${id}`);
+export const fetchGalleryItemById = id => get(`/api/gallery/${id}`);
+export const fetchSpaceEventById = id => get(`/api/space/event/${id}`);
+export const calculateAstrology = data => post('/api/astrology/calculate', data);

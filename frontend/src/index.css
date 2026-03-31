@@ -6,139 +6,161 @@
 
 @layer base {
   :root {
-    --background: 0 0% 1%;
+    --background: 0 0% 0%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 4%;
+    --card: 240 10% 3%;
     --card-foreground: 0 0% 98%;
     --primary: 30 100% 50%;
     --primary-foreground: 0 0% 0%;
-    --secondary: 240 4% 16%;
+    --secondary: 240 4% 10%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 4% 16%;
-    --muted-foreground: 240 5% 65%;
-    --accent: 240 4% 16%;
+    --muted: 240 4% 10%;
+    --muted-foreground: 240 5% 60%;
+    --accent: 240 4% 10%;
     --accent-foreground: 0 0% 98%;
-    --border: 240 4% 16%;
-    --input: 240 4% 16%;
+    --border: 240 4% 10%;
+    --input: 240 4% 10%;
     --ring: 30 100% 50%;
     --radius: 0.75rem;
   }
-
-  * {
-    @apply border-border;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
+  * { @apply border-border; }
+  html { scroll-behavior: smooth; }
   body {
-    background: #030303;
-    color: #ffffff;
+    background: #000;
+    color: #fff;
     font-family: 'Noto Sans Tamil', sans-serif;
     overflow-x: hidden;
-  }
-
-  h1, h2, h3 {
-    font-family: 'Arima Madurai', serif;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #030303; }
-::-webkit-scrollbar-thumb { background: rgba(255, 157, 0, 0.4); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 157, 0, 0.7); }
+/* ─── Typography ──────────────────────────────────────────── */
+.font-display  { font-family: 'Arima Madurai', serif; }
+.font-body     { font-family: 'Noto Sans Tamil', sans-serif; }
 
-/* Glow animations */
-@keyframes glow-pulse {
-  0%, 100% { text-shadow: 0 0 20px rgba(255,157,0,0.6), 0 0 40px rgba(255,157,0,0.3); }
-  50% { text-shadow: 0 0 40px rgba(255,157,0,0.9), 0 0 80px rgba(255,157,0,0.5), 0 0 120px rgba(255,157,0,0.2); }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-}
-
-@keyframes star-twinkle {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
-}
-
-@keyframes shooting-star {
-  0% { transform: translateX(-100px) translateY(0); opacity: 1; width: 0; }
-  100% { transform: translateX(300px) translateY(50px); opacity: 0; width: 150px; }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Utility classes */
-.glow-text {
-  animation: glow-pulse 3s ease-in-out infinite;
-}
-
-.font-tamil-heading {
+.text-display {
   font-family: 'Arima Madurai', serif;
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
 }
 
-.font-tamil-body {
+.text-editorial {
+  font-family: 'Arima Madurai', serif;
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+}
+
+.label-upper {
   font-family: 'Noto Sans Tamil', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 157, 0, 0.75);
 }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.04);
+/* ─── Gradient Text ───────────────────────────────────────── */
+.gradient-gold {
+  background: linear-gradient(135deg, #FF9D00 0%, #FFD700 50%, #FF8C00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-white-fade {
+  background: linear-gradient(135deg, #fff 60%, rgba(255,255,255,0.4));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Glass ───────────────────────────────────────────────── */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-gold {
+  background: rgba(255, 157, 0, 0.05);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 157, 0, 0.18);
 }
 
-.glass-card:hover {
-  border-color: rgba(255, 157, 0, 0.4);
-  box-shadow: 0 0 30px rgba(255, 157, 0, 0.12), 0 8px 32px rgba(0,0,0,0.4);
-  transform: translateY(-4px);
+/* ─── Cinematic helpers ───────────────────────────────────── */
+.vignette {
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
 }
 
-.neon-border {
-  border: 1px solid rgba(255, 157, 0, 0.5);
-  box-shadow: 0 0 10px rgba(255, 157, 0, 0.2), inset 0 0 10px rgba(255, 157, 0, 0.05);
+.neon-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,157,0,0.5), transparent);
 }
 
-.gradient-text {
-  background: linear-gradient(135deg, #FF9D00 0%, #FFD700 50%, #FF5722 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ─── Keyframes ───────────────────────────────────────────── */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-14px); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255,157,0,0.3); }
+  50%       { box-shadow: 0 0 50px rgba(255,157,0,0.6), 0 0 100px rgba(255,157,0,0.2); }
+}
+@keyframes shimmer-text {
+  0%   { background-position: -400% center; }
+  100% { background-position: 400% center; }
+}
+@keyframes orbit-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(48px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.gradient-text-shimmer {
-  background: linear-gradient(90deg, #FF9D00, #FFD700, #FF5722, #FF9D00);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 3s linear infinite;
+.animate-float    { animation: float-slow 7s ease-in-out infinite; }
+.animate-glow     { animation: pulse-glow 3s ease-in-out infinite; }
+.animate-fade-up  { animation: fade-up 0.8s ease forwards; }
+
+/* ─── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,157,0,0.3); border-radius: 2px; }
+
+/* ─── Section Divider ─────────────────────────────────────── */
+.section-line {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, #FF9D00, transparent);
+  margin: 16px 0;
 }
 
-.section-divider {
-  width: 80px;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #FF9D00, transparent);
-  margin: 16px auto;
+/* ─── Noise overlay ───────────────────────────────────────── */
+.noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: overlay;
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.8s ease forwards;
-}
+/* ─── Planet Glow ─────────────────────────────────────────── */
+.planet-glow { filter: drop-shadow(0 0 20px rgba(255,157,0,0.4)); }
 
-.float-animation {
-  animation: float 6s ease-in-out infinite;
+/* ─── Image hover ─────────────────────────────────────────── */
+.img-hover {
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              filter 0.4s ease;
+}
+.img-hover:hover {
+  transform: scale(1.04);
+  filter: brightness(1.1);
 }

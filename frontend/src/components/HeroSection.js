@@ -1,135 +1,144 @@
 import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
 const VIDEO_URL = 'https://customer-assets.emergentagent.com/job_c5d8a91a-ec18-4f3a-9ccd-e978a3b6b881/artifacts/xlkvujb9_215018.mp4';
 
 const HeroSection = () => {
   const videoRef = useRef(null);
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
+  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '25%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {});
-    }
+    if (videoRef.current) videoRef.current.play().catch(() => {});
   }, []);
-
-  const scrollToNext = () => {
-    const el = document.querySelector('#space');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
 
   return (
     <section
       id="hero"
+      ref={sectionRef}
       data-testid="hero-section"
-      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
-      style={{ zIndex: 1 }}
+      style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}
     >
-      {/* Video Background */}
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ zIndex: 0 }}
-      >
+      {/* Video */}
+      <video ref={videoRef} autoPlay muted loop playsInline
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }}>
         <source src={VIDEO_URL} type="video/mp4" />
       </video>
 
-      {/* Gradient overlays */}
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(3,3,3,0.75) 0%, rgba(3,3,3,0.55) 50%, rgba(3,3,3,0.75) 100%)', zIndex: 1 }} />
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(3,3,3,0.6) 100%)', zIndex: 2 }} />
-      <div className="absolute bottom-0 left-0 right-0 h-32" style={{ background: 'linear-gradient(to top, #030303, transparent)', zIndex: 3 }} />
+      {/* Overlays */}
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.62)', zIndex: 1 }} />
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.5) 100%)', zIndex: 2 }} />
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '30vh', background: 'linear-gradient(to top, #000, transparent)', zIndex: 3 }} />
 
       {/* Content */}
-      <div className="relative text-center px-4 max-w-5xl mx-auto" style={{ zIndex: 10 }}>
-        {/* MJ Brand */}
+      <motion.div
+        style={{ y: textY, opacity, position: 'relative', zIndex: 10, textAlign: 'center', padding: '0 20px', width: '100%' }}
+      >
+        {/* MJ */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
+          initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
+          transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
         >
           <h1
             data-testid="hero-brand"
-            className="font-tamil-heading font-black text-white select-none"
             style={{
-              fontSize: 'clamp(100px, 20vw, 200px)',
-              lineHeight: 0.9,
-              textShadow: '0 0 40px rgba(255,157,0,0.7), 0 0 80px rgba(255,157,0,0.4), 0 0 120px rgba(255,157,0,0.2)',
-              letterSpacing: '-0.02em',
+              fontFamily: "'Arima Madurai', serif",
+              fontWeight: 900,
+              fontSize: 'clamp(120px, 22vw, 240px)',
+              lineHeight: 0.82,
+              letterSpacing: '-0.04em',
+              margin: 0,
+              background: 'linear-gradient(135deg, #FFFFFF 30%, #FF9D00 70%, #FFD700 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              filter: 'drop-shadow(0 0 60px rgba(255,157,0,0.35))',
             }}
           >
-            <span className="gradient-text-shimmer">MJ</span>
+            MJ
           </h1>
         </motion.div>
 
+        {/* Subtitle */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.9 }}
-          className="mt-4"
+          style={{ marginTop: '20px' }}
         >
           <h2
             data-testid="hero-subtitle"
-            className="font-tamil-heading text-white font-bold"
-            style={{ fontSize: 'clamp(20px, 4vw, 36px)', textShadow: '0 0 20px rgba(255,157,0,0.5)' }}
+            style={{
+              fontFamily: "'Arima Madurai', serif",
+              fontWeight: 700,
+              fontSize: 'clamp(22px, 4.5vw, 48px)',
+              color: 'rgba(255,255,255,0.9)',
+              letterSpacing: '-0.01em',
+              margin: 0,
+            }}
           >
-            விண்வெளியை உணருங்கள்
+            விண்வெளி அனுபவம்
           </h2>
-          <p className="text-zinc-400 text-sm sm:text-base mt-1 font-tamil-body">Experience the Universe</p>
+          <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '13px', fontFamily: 'sans-serif', letterSpacing: '0.2em', marginTop: '6px' }}>
+            EXPERIENCE THE UNIVERSE
+          </p>
         </motion.div>
 
+        {/* Tagline pill */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9, duration: 0.8 }}
-          className="mt-6"
+          transition={{ delay: 0.9, duration: 0.7 }}
+          style={{ marginTop: '32px', display: 'inline-flex', alignItems: 'center', gap: '12px', padding: '8px 24px', borderRadius: '40px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}
         >
-          <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full font-tamil-body" style={{ background: 'rgba(255,157,0,0.1)', border: '1px solid rgba(255,157,0,0.3)' }}>
-            <span className="text-orange-400 text-sm font-semibold">கடந்தது</span>
-            <span className="text-zinc-600">•</span>
-            <span className="text-orange-300 text-sm font-semibold">நிகழ்காலம்</span>
-            <span className="text-zinc-600">•</span>
-            <span className="text-amber-400 text-sm font-semibold">எதிர்காலம்</span>
-          </div>
+          <span style={{ color: '#FF9D00', fontSize: '12px', fontFamily: "'Noto Sans Tamil',sans-serif", fontWeight: 600 }}>கடந்தது</span>
+          <span style={{ width: '3px', height: '3px', borderRadius: '50%', background: 'rgba(255,255,255,0.3)' }} />
+          <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', fontFamily: "'Noto Sans Tamil',sans-serif" }}>நிகழ்காலம்</span>
+          <span style={{ width: '3px', height: '3px', borderRadius: '50%', background: 'rgba(255,255,255,0.3)' }} />
+          <span style={{ color: '#FFD700', fontSize: '12px', fontFamily: "'Noto Sans Tamil',sans-serif", fontWeight: 600 }}>எதிர்காலம்</span>
         </motion.div>
 
+        {/* CTA Buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.3, duration: 0.8 }}
-          className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+          transition={{ delay: 1.2, duration: 0.7 }}
+          style={{ marginTop: '40px', display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}
         >
           <button
             data-testid="hero-explore-btn"
-            onClick={scrollToNext}
-            className="px-8 py-3 rounded-xl font-semibold text-black font-tamil-body transition-all duration-300 hover:scale-105"
-            style={{ background: 'linear-gradient(135deg, #FF9D00, #FFD700)', boxShadow: '0 0 25px rgba(255,157,0,0.4)' }}
+            onClick={() => document.querySelector('#space')?.scrollIntoView({ behavior: 'smooth' })}
+            style={{ padding: '14px 36px', borderRadius: '50px', background: 'linear-gradient(135deg,#FF9D00,#FFD700)', color: '#000', fontWeight: 700, fontSize: '14px', fontFamily: "'Noto Sans Tamil',sans-serif", border: 'none', cursor: 'pointer', boxShadow: '0 0 30px rgba(255,157,0,0.35)', transition: 'transform 0.2s, box-shadow 0.2s' }}
+            onMouseOver={e => { e.currentTarget.style.transform = 'scale(1.04)'; e.currentTarget.style.boxShadow = '0 0 50px rgba(255,157,0,0.5)'; }}
+            onMouseOut={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(255,157,0,0.35)'; }}
           >
             ஆராயுங்கள்
           </button>
           <button
-            onClick={() => document.querySelector('#astrology').scrollIntoView({ behavior: 'smooth' })}
             data-testid="hero-astrology-btn"
-            className="px-8 py-3 rounded-xl font-semibold text-orange-400 font-tamil-body border border-orange-500/40 hover:border-orange-400 hover:bg-white/5 transition-all duration-300"
+            onClick={() => document.querySelector('#astrology')?.scrollIntoView({ behavior: 'smooth' })}
+            style={{ padding: '14px 36px', borderRadius: '50px', background: 'transparent', color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontFamily: "'Noto Sans Tamil',sans-serif", border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer', transition: 'all 0.2s', backdropFilter: 'blur(10px)' }}
+            onMouseOver={e => { e.currentTarget.style.borderColor = 'rgba(255,157,0,0.5)'; e.currentTarget.style.color = '#FF9D00'; }}
+            onMouseOut={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)'; }}
           >
-            ஜோதிடம் →
+            ஜோதிடம்
           </button>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Scroll indicator */}
       <motion.button
-        onClick={scrollToNext}
+        onClick={() => document.querySelector('#space')?.scrollIntoView({ behavior: 'smooth' })}
         data-testid="hero-scroll-btn"
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-zinc-500 hover:text-orange-400 transition-colors"
-        style={{ zIndex: 10 }}
-        animate={{ y: [0, 10, 0] }}
-        transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+        style={{ position: 'absolute', bottom: '40px', left: '50%', transform: 'translateX(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.3)', zIndex: 10 }}
+        animate={{ y: [0, 8, 0] }}
+        transition={{ repeat: Infinity, duration: 2.2 }}
       >
-        <ChevronDown size={30} />
+        <ChevronDown size={28} />
       </motion.button>
     </section>
   );
