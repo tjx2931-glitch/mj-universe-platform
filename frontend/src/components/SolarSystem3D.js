@@ -250,9 +250,12 @@ const SolarSystem3D = () => {
       renderer.domElement.removeEventListener('mousemove', onMouseMove);
       renderer.domElement.removeEventListener('pointerdown', onPointerDown);
       renderer.domElement.removeEventListener('wheel', onWheel);
+      renderer.domElement.removeEventListener('mouseenter', onMouseEnter);
+      renderer.domElement.removeEventListener('mouseleave', onMouseLeave);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('resize', onResize);
+      document.body.style.overflow = ''; // restore on unmount
       if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
       renderer.dispose();
     };

@@ -16,21 +16,12 @@ const useInView = () => {
   const ref = useRef(null);
   const [v, setV] = useState(false);
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setV(true); }, { threshold: 0.08 });
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setV(true); }, { threshold: 0.06 });
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
   return [ref, v];
 };
-
-// Grid layout patterns
-const LAYOUT = [
-  'col-span-4 row-span-2', 'col-span-4', 'col-span-4',
-  'col-span-3', 'col-span-5 row-span-2', 'col-span-4',
-  'col-span-4', 'col-span-4', 'col-span-4 row-span-2',
-  'col-span-4', 'col-span-4', 'col-span-4',
-  'col-span-3', 'col-span-3', 'col-span-3', 'col-span-3',
-];
 
 const ObjectCard = ({ obj, idx }) => {
   const navigate = useNavigate();
@@ -40,37 +31,80 @@ const ObjectCard = ({ obj, idx }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: idx * 0.04 }}
+      transition={{ delay: idx * 0.03 }}
       data-testid={`object-card-${idx}`}
       onClick={() => navigate(`/object/${obj.id}`)}
-      style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', cursor: 'pointer', minHeight: '220px', background: '#0A0A0A' }}
-      className="group"
+      style={{
+        background: '#080810',
+        borderRadius: '14px',
+        overflow: 'hidden',
+        cursor: 'pointer',
+        border: '1px solid rgba(255,255,255,0.06)',
+        transition: 'border-color 0.3s, transform 0.3s, box-shadow 0.3s',
+      }}
+      onMouseOver={e => {
+        e.currentTarget.style.borderColor = `${accent}40`;
+        e.currentTarget.style.transform = 'translateY(-3px)';
+        e.currentTarget.style.boxShadow = `0 8px 28px ${accent}14`;
+      }}
+      onMouseOut={e => {
+        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = 'none';
+      }}
     >
-      <img
-        src={obj.image_url}
-        alt={obj.name_english}
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.7s ease' }}
-        className="img-hover"
-        onError={e => { e.target.src = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&q=60'; }}
-      />
-
-      {/* Gradient overlay */}
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.3) 60%, transparent 100%)', transition: 'opacity 0.3s' }} />
-
-      {/* Hover border */}
-      <div style={{ position: 'absolute', inset: 0, borderRadius: '12px', border: `1px solid ${accent}00`, transition: 'border-color 0.3s', pointerEvents: 'none' }}
-        className="group-hover:border-orange-500/40" />
-
-      {/* Content */}
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px' }}>
-        <span style={{ fontSize: '10px', color: accent, letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: "'Noto Sans Tamil',sans-serif", display: 'block', marginBottom: '6px' }}>{obj.type}</span>
-        <h3 style={{ fontFamily: "'Arima Madurai',serif", fontWeight: 900, fontSize: 'clamp(22px, 3vw, 34px)', color: 'white', lineHeight: 0.95, margin: 0 }}>{obj.name_tamil}</h3>
-        <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '11px', fontFamily: 'sans-serif', marginTop: '4px' }}>{obj.name_english}</p>
+      {/* Image container — 1:1 aspect ratio, object-fit: contain so rings/stars fully visible */}
+      <div style={{
+        position: 'relative',
+        width: '100%',
+        aspectRatio: '1 / 1',
+        background: '#050508',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+        <img
+          src={obj.image_url}
+          alt={obj.name_english}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            padding: '6px',
+            transition: 'transform 0.5s ease',
+          }}
+          onMouseOver={e => { e.target.style.transform = 'scale(1.06)'; }}
+          onMouseOut={e => { e.target.style.transform = 'scale(1)'; }}
+          onError={e => { e.target.src = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&q=60'; }}
+        />
+        {/* Type badge */}
+        <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
+          <span style={{
+            fontSize: '9px', color: accent,
+            letterSpacing: '0.12em', textTransform: 'uppercase',
+            fontFamily: "'Noto Sans Tamil',sans-serif",
+            background: `${accent}15`,
+            padding: '3px 8px', borderRadius: '10px',
+            border: `1px solid ${accent}25`,
+          }}>{obj.type}</span>
+        </div>
       </div>
 
-      {/* Bottom glow on hover */}
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '2px', background: `linear-gradient(90deg, transparent, ${accent}, transparent)`, opacity: 0, transition: 'opacity 0.3s', pointerEvents: 'none' }}
-        className="group-hover:opacity-100" />
+      {/* Text — below image, not overlapping */}
+      <div style={{ padding: '14px 16px 16px' }}>
+        <h3 style={{
+          fontFamily: "'Arima Madurai',serif", fontWeight: 900,
+          fontSize: 'clamp(18px, 2.2vw, 24px)', color: 'white',
+          lineHeight: 1.1, margin: 0, marginBottom: '3px',
+          wordBreak: 'break-word', overflowWrap: 'break-word',
+        }}>
+          {obj.name_tamil}
+        </h3>
+        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '11px', fontFamily: 'sans-serif', margin: 0 }}>
+          {obj.name_english}
+        </p>
+      </div>
     </motion.div>
   );
 };
@@ -100,29 +134,18 @@ const AstronomyObjects = () => {
         </p>
       </motion.div>
 
-      {/* Masonry grid */}
+      {/* Auto-fit responsive grid — no masonry, full image visibility */}
       {loading ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '8px' }}>
-          {[...Array(8)].map((_, i) => <div key={i} style={{ gridColumn: 'span 3', height: '220px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }} />)}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+          {[...Array(8)].map((_, i) => (
+            <div key={i} style={{ aspectRatio: '1/1', background: 'rgba(255,255,255,0.03)', borderRadius: '14px' }} />
+          ))}
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '8px', gridAutoRows: '220px' }}>
-          {objects.map((obj, idx) => {
-            // Define layout spans
-            const layouts = [
-              { colSpan: 4, rowSpan: 2 }, { colSpan: 4, rowSpan: 1 }, { colSpan: 4, rowSpan: 1 },
-              { colSpan: 3, rowSpan: 1 }, { colSpan: 5, rowSpan: 2 }, { colSpan: 4, rowSpan: 1 },
-              { colSpan: 4, rowSpan: 1 }, { colSpan: 4, rowSpan: 1 }, { colSpan: 4, rowSpan: 2 },
-              { colSpan: 4, rowSpan: 1 }, { colSpan: 4, rowSpan: 1 }, { colSpan: 3, rowSpan: 1 },
-              { colSpan: 3, rowSpan: 1 }, { colSpan: 3, rowSpan: 1 }, { colSpan: 3, rowSpan: 1 }, { colSpan: 3, rowSpan: 1 },
-            ];
-            const layout = layouts[idx % layouts.length];
-            return (
-              <div key={obj.id} style={{ gridColumn: `span ${layout.colSpan}`, gridRow: `span ${layout.rowSpan}` }}>
-                <ObjectCard obj={obj} idx={idx} />
-              </div>
-            );
-          })}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px', alignItems: 'start' }}>
+          {objects.map((obj, idx) => (
+            <ObjectCard key={obj.id} obj={obj} idx={idx} />
+          ))}
         </div>
       )}
     </section>
