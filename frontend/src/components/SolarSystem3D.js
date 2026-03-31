@@ -173,7 +173,7 @@ const SolarSystem3D = () => {
     // Simple mouse-drag orbit controls
     let isDragging = false, prevX = 0, prevY = 0;
     let phi = Math.PI / 6, theta = 0;
-    const radius_cam = 85;
+    let camRadius = 85; // mutable — updated on zoom
 
     const onPointerDown = (e) => { isDragging = true; prevX = e.clientX; prevY = e.clientY; };
     const onPointerMove = (e) => {
@@ -183,23 +183,33 @@ const SolarSystem3D = () => {
       theta -= dx;
       phi = Math.max(0.1, Math.min(Math.PI / 2.2, phi + dy));
       prevX = e.clientX; prevY = e.clientY;
-      camera.position.x = radius_cam * Math.sin(phi) * Math.sin(theta);
-      camera.position.y = radius_cam * Math.cos(phi);
-      camera.position.z = radius_cam * Math.sin(phi) * Math.cos(theta);
+      camera.position.x = camRadius * Math.sin(phi) * Math.sin(theta);
+      camera.position.y = camRadius * Math.cos(phi);
+      camera.position.z = camRadius * Math.sin(phi) * Math.cos(theta);
       camera.lookAt(0, 0, 0);
     };
     const onPointerUp = () => { isDragging = false; };
 
-    // Scroll to zoom
+    // Scroll to zoom — preventDefault() stops page from scrolling
     const onWheel = (e) => {
-      const newR = Math.max(15, Math.min(150, radius_cam + e.deltaY * 0.1));
-      camera.position.multiplyScalar(newR / radius_cam);
+      e.preventDefault();
+      e.stopPropagation();
+      camRadius = Math.max(15, Math.min(150, camRadius + e.deltaY * 0.08));
+      const curLen = camera.position.length();
+      if (curLen > 0) camera.position.multiplyScalar(camRadius / curLen);
     };
+
+    // Lock page scroll when mouse is inside canvas
+    const onMouseEnter = () => { document.body.style.overflow = 'hidden'; };
+    const onMouseLeave = () => { document.body.style.overflow = ''; };
 
     renderer.domElement.addEventListener('pointerdown', onPointerDown);
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerUp);
-    renderer.domElement.addEventListener('wheel', onWheel);
+    // passive: false is REQUIRED for preventDefault() to work on wheel events
+    renderer.domElement.addEventListener('wheel', onWheel, { passive: false });
+    renderer.domElement.addEventListener('mouseenter', onMouseEnter);
+    renderer.domElement.addEventListener('mouseleave', onMouseLeave);
 
     // Animation loop
     let t0 = performance.now();
