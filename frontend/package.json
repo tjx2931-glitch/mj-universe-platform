@@ -13,19 +13,19 @@
     "date-fns": "2.30.0",
 
     "axios": "^1.8.4",
-    "framer-motion": "^12.38.0",
+    "framer-motion": "^10.18.0",
 
-    "@react-three/fiber": "^9.5.0",
-    "@react-three/drei": "^10.7.7",
-    "three": "^0.183.2",
+    "@react-three/fiber": "^8.15.16",
+    "@react-three/drei": "^9.105.6",
+    "three": "^0.160.0",
 
     "clsx": "^2.1.1",
     "zod": "^3.24.4",
 
-    "lucide-react": "^0.507.0",
+    "lucide-react": "^0.263.1",
 
-    "ajv": "^8.12.0",
-    "ajv-keywords": "^5.1.0"
+    "ajv": "8.12.0",
+    "ajv-keywords": "5.1.0"
   },
 
   "scripts": {
@@ -52,5 +52,10 @@
     "tailwindcss": "^3.4.17",
     "postcss": "^8.4.49",
     "autoprefixer": "^10.4.20"
+  },
+
+  "overrides": {
+    "lodash": "4.17.21",
+    "ajv": "8.12.0"
   }
 }
