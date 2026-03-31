@@ -2,84 +2,76 @@
 
 ## Project Overview
 **Name**: MJ – விண்வெளி அனுபவம் (Space Experience)  
-**Type**: Premium Tamil-first cosmic website  
+**Type**: Cinematic premium Tamil-first cosmic website  
 **URL**: https://nakshatra-yatra.preview.emergentagent.com  
-**Created**: 2024  
-
-## User Personas
-- Tamil-speaking space enthusiasts (primary)  
-- Students interested in astronomy  
-- General public curious about space & Tamil astrology  
-- Cultural users wanting Tamil-language space content  
+**Architecture**: React 19 + FastAPI + MongoDB  
 
 ## Architecture
-- **Frontend**: React 19 + Tailwind CSS + Framer Motion + Canvas API  
-- **Backend**: FastAPI (port 8001) + Motor (async MongoDB)  
-- **Database**: MongoDB with seeded realistic data  
-- **Fonts**: Arima Madurai (headings) + Noto Sans Tamil (body)  
+- **Frontend**: React 19 + React Router DOM + Tailwind CSS + Framer Motion + Three.js + Canvas API
+- **Backend**: FastAPI (port 8001) + Motor (async MongoDB)
+- **Database**: MongoDB with seeded realistic data
+- **Fonts**: Arima Madurai (headings) + Noto Sans Tamil (body)
+- **3D**: Three.js v0.183.2 (SolarSystem3D component)
+- **Animations**: Framer Motion v12 (scroll-based, parallax, horizontal)
 
-## Core Requirements (Static)
-1. Tamil-first UI with English secondary  
-2. Hero video background (user's MP4)  
-3. Deep black + orange/gold cosmic theme  
-4. Glassmorphism cards with neon borders  
-5. Canvas-based animated starfield  
-6. Real NASA/space image URLs (no placeholders)  
-7. All data from MongoDB (no hardcoded frontend data)  
+## Pages & Routes
+- `/` → HomePage (all scrollable sections)
+- `/object/:id` → ObjectDetail (astronomy object detail page)
+- `/gallery/:id` → GalleryDetail (gallery image detail page)
 
-## What's Been Implemented (2024)
+## Phase 1 Implementation (MVP - Initial Build)
+- Hero video background + starfield
+- Space Events (Past 20 / Present 15 / Future 15)
+- Astronomy Objects grid + modal
+- Timeline 25 events (vertical)
+- Tamil Vedic Astrology Calculator (Rasi/Nakshatra/Lagna/Panchangam)
+- Gallery 12 NASA images
 
-### Backend APIs
-- `GET /api/space/past` - 20 historical space events  
-- `GET /api/space/present` - 15 active missions (NASA, ISRO, ESA)  
-- `GET /api/space/future` - 15 planned missions  
-- `GET /api/objects` - 16 astronomy objects (planets, stars, constellations, galaxies)  
-- `GET /api/timeline` - 25 timeline events (200 BC → 2040)  
-- `GET /api/gallery` - 12 real NASA/space image gallery items  
-- `POST /api/astrology/calculate` - Tamil Vedic astrology calculator (Rasi/Nakshatra/Lagna/Panchangam)  
+## Phase 2 Implementation (Cinematic Upgrade)
+### Sections Redesigned (Cinematic/Editorial)
+1. **Hero**: Massive MJ typography (clamp 120-240px), parallax scroll, gradient-gold text
+2. **Feature Showcase**: Split editorial - "SPACE BEGINS HERE" text + Pillars of Creation image + animated stats counters
+3. **Live Astronomy (NEW)**: Lunar phase SVG visualization, upcoming events panel, space fact - live from /api/live-astronomy
+4. **3D Solar System (NEW)**: Three.js canvas with 6 orbiting planets, Saturn rings, sun glow, click → info panel, gentle camera bob
+5. **Space Section**: Horizontal draggable card scroll per tab, editorial portrait cards (290px wide)
+6. **Astronomy Objects**: CSS Grid masonry bento layout, linked to /object/:id detail page
+7. **Timeline**: Framer Motion horizontal scroll (sticky + useScroll + useTransform), 25 events
+8. **Astrology Calculator**: Canvas API Kundali PNG export ("ஜாதகம் பதிவிறக்கு" button)
+9. **Gallery**: CSS Grid editorial asymmetric layout with rotations, full-screen modal
 
-### Frontend Sections
-1. **Starfield** - Canvas-based animated stars with shooting stars  
-2. **Navbar** - Glassmorphic with 6 Tamil navigation links, mobile responsive  
-3. **Hero** - Fullscreen MP4 video background, MJ glow branding, Tamil tagline  
-4. **Space Section** - Past/Present/Future tabs with image cards + badges  
-5. **Astronomy Objects** - 16-card bento grid + detail modal  
-6. **Timeline** - 25 events, vertical alternating layout, animated  
-7. **Astrology Calculator** - Tamil Vedic calculator (birth date/time/place → results)  
-8. **Gallery** - 12 NASA images with zoom modal + prev/next navigation  
-9. **Footer** - Tamil tagline + credits  
+### New Features
+- React Router SPA with detail pages
+- ObjectDetail page: Hero image + large Tamil name + data boxes + fun fact
+- GalleryDetail page: Full-screen image + prev/next navigation
+- Kundali PNG export via HTML5 Canvas API (no external deps)
+- Live lunar phase calculation (mathematical, no API key)
+- Error boundaries around 3D/animation components
 
-### Data Seeded
-- 50 space content entries (past/present/future)  
-- 16 astronomy objects with Tamil names, real images, fun facts  
-- 25 timeline events from ancient Tamil astronomy to 2040  
-- 12 gallery items with Wikipedia Commons NASA images  
-- 12 Rasis, 27 Nakshatras for astrology calculation  
+## API Endpoints (All Working)
+### Original
+- GET /api/space/past (20), /api/space/present (15), /api/space/future (15)
+- GET /api/objects (16), /api/timeline (25), /api/gallery (12)
+- POST /api/astrology/calculate
 
-## Testing Results (2024)
-- Backend: 100% (11/11 tests passed)  
-- Frontend: 100% - all major flows working  
+### New (Phase 2)
+- GET /api/live-astronomy (lunar phase + upcoming events + space fact)
+- GET /api/objects/:id (single object by id)
+- GET /api/gallery/:id (single gallery item by id)
+- GET /api/space/event/:id (single space event by id)
+
+## Testing Results
+- **Phase 1**: Backend 100% (11/11), Frontend 100%
+- **Phase 2**: Backend 100% (21/21), Frontend 100%
 
 ## Prioritized Backlog
-
-### P0 (Critical - Done)
-- [x] Hero video + starfield  
-- [x] Space events with real data  
-- [x] Astronomy objects grid + modal  
-- [x] Timeline 25 events  
-- [x] Astrology calculator  
-- [x] Gallery with NASA images  
-
-### P1 (Next Phase)
-- [ ] Individual object detail pages with routing  
-- [ ] Space event search/filter by agency or year  
-- [ ] Live astronomy data (Next sunrise/sunset, lunar phase)  
-- [ ] Share astrology result as image  
-- [ ] Dark/light mode toggle (currently forced dark)  
+### P1 (Next)
+- [ ] SpaceEvent detail page (/space/:id)
+- [ ] Search/filter space events by agency or year
+- [ ] Background music toggle (space ambient)
+- [ ] Mobile responsive fix for horizontal timeline
 
 ### P2 (Future)
-- [ ] Mobile app wrapper (React Native)  
-- [ ] AR space view (device camera overlay)  
-- [ ] Tamil TTS for space content  
-- [ ] User bookmarks/favorites (localStorage)  
-- [ ] Additional language: Telugu, Malayalam  
+- [ ] AR space view via device camera
+- [ ] Tamil TTS for astronomical content
+- [ ] Social sharing for astrology results (OG image)
+- [ ] Additional language: Telugu, Malayalam
