@@ -1,17 +1,12 @@
-// craco.config.js
 const path = require("path");
 require("dotenv").config();
 
-// Check if we're in development/preview mode (not production build)
-// Craco sets NODE_ENV=development for start, NODE_ENV=production for build
 const isDevServer = process.env.NODE_ENV !== "production";
 
-// Environment variable overrides
 const config = {
   enableHealthCheck: process.env.ENABLE_HEALTH_CHECK === "true",
 };
 
-// Conditionally load health check modules only if enabled
 let WebpackHealthPlugin;
 let setupHealthEndpoints;
 let healthPluginInstance;
@@ -32,48 +27,54 @@ let webpackConfig = {
       },
     },
   },
+
   webpack: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
+      "@": path.resolve(__dirname, "src"),
     },
-    configure: (webpackConfig) => {
 
-      // Add ignored patterns to reduce watched directories
-        webpackConfig.watchOptions = {
-          ...webpackConfig.watchOptions,
-          ignored: [
-            '**/node_modules/**',
-            '**/.git/**',
-            '**/build/**',
-            '**/dist/**',
-            '**/coverage/**',
-            '**/public/**',
+    configure: (config) => {
+
+      // ✅ FIX 1: REMOVE ForkTsChecker (THIS FIXES YOUR BUILD ERROR)
+      config.plugins = config.plugins.filter(
+        (plugin) =>
+          plugin.constructor &&
+          plugin.constructor.name !== "ForkTsCheckerWebpackPlugin"
+      );
+
+      // ✅ FIX 2: Reduce unnecessary watching (performance)
+      config.watchOptions = {
+        ...config.watchOptions,
+        ignored: [
+          "**/node_modules/**",
+          "**/.git/**",
+          "**/build/**",
+          "**/dist/**",
+          "**/coverage/**",
+          "**/public/**",
         ],
       };
 
-      // Add health check plugin to webpack if enabled
+      // ✅ FIX 3: Optional health plugin
       if (config.enableHealthCheck && healthPluginInstance) {
-        webpackConfig.plugins.push(healthPluginInstance);
+        config.plugins.push(healthPluginInstance);
       }
-      return webpackConfig;
+
+      return config;
     },
   },
 };
 
 webpackConfig.devServer = (devServerConfig) => {
-  // Add health check endpoints if enabled
   if (config.enableHealthCheck && setupHealthEndpoints && healthPluginInstance) {
-    const originalSetupMiddlewares = devServerConfig.setupMiddlewares;
+    const originalSetup = devServerConfig.setupMiddlewares;
 
     devServerConfig.setupMiddlewares = (middlewares, devServer) => {
-      // Call original setup if exists
-      if (originalSetupMiddlewares) {
-        middlewares = originalSetupMiddlewares(middlewares, devServer);
+      if (originalSetup) {
+        middlewares = originalSetup(middlewares, devServer);
       }
 
-      // Setup health endpoints
       setupHealthEndpoints(devServer, healthPluginInstance);
-
       return middlewares;
     };
   }
@@ -81,15 +82,18 @@ webpackConfig.devServer = (devServerConfig) => {
   return devServerConfig;
 };
 
-// Wrap with visual edits (automatically adds babel plugin, dev server, and overlay in dev mode)
+// ✅ Keep visual edits only in dev
 if (isDevServer) {
   try {
     const { withVisualEdits } = require("@emergentbase/visual-edits/craco");
     webpackConfig = withVisualEdits(webpackConfig);
   } catch (err) {
-    if (err.code === 'MODULE_NOT_FOUND' && err.message.includes('@emergentbase/visual-edits/craco')) {
+    if (
+      err.code === "MODULE_NOT_FOUND" &&
+      err.message.includes("@emergentbase/visual-edits/craco")
+    ) {
       console.warn(
-        "[visual-edits] @emergentbase/visual-edits not installed — visual editing disabled."
+        "[visual-edits] not installed — skipping visual editing."
       );
     } else {
       throw err;
