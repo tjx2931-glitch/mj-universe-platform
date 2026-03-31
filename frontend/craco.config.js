@@ -17,7 +17,7 @@ if (config.enableHealthCheck) {
   healthPluginInstance = new WebpackHealthPlugin();
 }
 
-let webpackConfig = {
+let cracoConfig = {
   eslint: {
     configure: {
       extends: ["plugin:react-hooks/recommended"],
@@ -35,14 +35,20 @@ let webpackConfig = {
 
     configure: (config) => {
 
-      // ✅ FIX 1: REMOVE ForkTsChecker (THIS FIXES YOUR BUILD ERROR)
+      // ✅ FIX 1: Remove ForkTsChecker (ajv crash source)
       config.plugins = config.plugins.filter(
         (plugin) =>
           plugin.constructor &&
           plugin.constructor.name !== "ForkTsCheckerWebpackPlugin"
       );
 
-      // ✅ FIX 2: Reduce unnecessary watching (performance)
+      // ✅ FIX 2: Disable Terser (Node 24 incompatibility fix)
+      config.optimization = {
+        ...config.optimization,
+        minimize: false,
+      };
+
+      // ✅ FIX 3: Reduce file watching (performance)
       config.watchOptions = {
         ...config.watchOptions,
         ignored: [
@@ -55,7 +61,7 @@ let webpackConfig = {
         ],
       };
 
-      // ✅ FIX 3: Optional health plugin
+      // ✅ FIX 4: Add health plugin if enabled
       if (config.enableHealthCheck && healthPluginInstance) {
         config.plugins.push(healthPluginInstance);
       }
@@ -65,7 +71,8 @@ let webpackConfig = {
   },
 };
 
-webpackConfig.devServer = (devServerConfig) => {
+// Dev server config
+cracoConfig.devServer = (devServerConfig) => {
   if (config.enableHealthCheck && setupHealthEndpoints && healthPluginInstance) {
     const originalSetup = devServerConfig.setupMiddlewares;
 
@@ -82,23 +89,21 @@ webpackConfig.devServer = (devServerConfig) => {
   return devServerConfig;
 };
 
-// ✅ Keep visual edits only in dev
+// Dev-only visual edits
 if (isDevServer) {
   try {
     const { withVisualEdits } = require("@emergentbase/visual-edits/craco");
-    webpackConfig = withVisualEdits(webpackConfig);
+    cracoConfig = withVisualEdits(cracoConfig);
   } catch (err) {
     if (
       err.code === "MODULE_NOT_FOUND" &&
       err.message.includes("@emergentbase/visual-edits/craco")
     ) {
-      console.warn(
-        "[visual-edits] not installed — skipping visual editing."
-      );
+      console.warn("[visual-edits] not installed — skipping.");
     } else {
       throw err;
     }
   }
 }
 
-module.exports = webpackConfig;
+module.exports = cracoConfig;
