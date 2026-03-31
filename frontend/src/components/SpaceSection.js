@@ -37,7 +37,7 @@ const SpaceCard = ({ item, idx, onClick }) => (
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px' }}>
         <span style={{ background: 'rgba(255,157,0,0.15)', color: '#FF9D00', padding: '3px 10px', borderRadius: '12px', fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: "'Noto Sans Tamil',sans-serif" }}>{item.agency}</span>
         <h3 style={{ fontFamily: "'Arima Madurai',serif", fontWeight: 700, fontSize: '18px', color: 'white', marginTop: '8px', lineHeight: 1.2 }}>{item.title_tamil}</h3>
-        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '11px', marginTop: '3px', fontFamily: 'sans-serif' }}>{item.date}</p>
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '11px', marginTop: '3px', fontFamily: 'sans-serif' }}>{item?.date}</p>
       </div>
     </div>
   </motion.div>
@@ -100,7 +100,7 @@ const SpaceEventModal = ({ item, onClose }) => {
         <div style={{ padding: '28px 32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '16px' }}>
             <Calendar size={13} color="rgba(255,157,0,0.6)" />
-            <span style={{ color: 'rgba(255,157,0,0.8)', fontSize: '13px', fontFamily: "'Noto Sans Tamil',sans-serif" }}>{item.date}</span>
+            <span style={{ color: 'rgba(255,157,0,0.8)', fontSize: '13px', fontFamily: "'Noto Sans Tamil',sans-serif" }}>{item?.date}</span>
           </div>
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '15px', lineHeight: 1.8, fontFamily: "'Noto Sans Tamil',sans-serif", marginBottom: '14px' }}>
             {item.description_tamil}

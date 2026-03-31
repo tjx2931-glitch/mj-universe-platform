@@ -218,7 +218,7 @@ def calculate_astrology(data: AstrologyInput):
     except Exception:
         birth_dt = datetime.strptime(data.birth_date, "%Y-%m-%d")
 
-    bd = birth_dt.date()
+    bd = birth_dt?.date()
     ref = ddate(2000, 1, 1)
     days = (bd - ref).days
 
