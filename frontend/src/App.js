@@ -1,52 +1,34 @@
-import { useEffect } from "react";
-import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
-  return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
+import React from 'react';
+import StarField from './components/StarField';
+import Navbar from './components/Navbar';
+import HeroSection from './components/HeroSection';
+import SpaceSection from './components/SpaceSection';
+import AstronomyObjects from './components/AstronomyObjects';
+import Timeline from './components/Timeline';
+import AstrologyCalculator from './components/AstrologyCalculator';
+import Gallery from './components/Gallery';
+import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+    <div className="min-h-screen" style={{ background: '#030303' }}>
+      <StarField />
+      <Navbar />
+      <main>
+        <HeroSection />
+        <SpaceSection />
+        <AstronomyObjects />
+        <Timeline />
+        <AstrologyCalculator />
+        <Gallery />
+      </main>
+      <footer className="border-t border-white/10 py-10 text-center" style={{ background: 'rgba(0,0,0,0.8)' }}>
+        <div className="max-w-4xl mx-auto px-6">
+          <p className="text-2xl font-bold gradient-text font-tamil-heading mb-2">MJ</p>
+          <p className="text-zinc-500 text-sm font-tamil-body mb-1">விண்வெளியை உணருங்கள் • கடந்தது • நிகழ்காலம் • எதிர்காலம்</p>
+          <p className="text-zinc-600 text-xs">© 2024 MJ – விண்வெளி அனுபவம் • NASA, ISRO & ESA Data</p>
+        </div>
+      </footer>
     </div>
   );
 }
