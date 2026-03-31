@@ -1,0 +1,110 @@
+{
+  "project_name": "MJ - விண்வெளி அனுபவம்",
+  "theme_and_archetype": {
+    "theme": "dark",
+    "archetype": "Archetype 5: Jewel & Luxury (with futuristic/neon tech accents)",
+    "justification": "Matches the premium, mysterious cosmic branding requested. Dark void background with glowing gold/orange neon elements highlights the space theme and provides high contrast for glowing Tamil typography."
+  },
+  "color_palette": {
+    "background": {
+      "base": "#030303",
+      "surface": "#09090b",
+      "glass": "rgba(255, 255, 255, 0.03)"
+    },
+    "primary": {
+      "DEFAULT": "#FF9D00",
+      "glow": "rgba(255, 157, 0, 0.5)"
+    },
+    "secondary": {
+      "DEFAULT": "#FF5722",
+      "glow": "rgba(255, 87, 34, 0.5)"
+    },
+    "text": {
+      "primary": "#FFFFFF",
+      "secondary": "#A1A1AA",
+      "accent": "#FFD700"
+    },
+    "borders": {
+      "subtle": "rgba(255, 255, 255, 0.1)",
+      "neon": "rgba(255, 157, 0, 0.5)"
+    }
+  },
+  "typography": {
+    "fonts": {
+      "headings": "'Arima Madurai', serif",
+      "body": "'Noto Sans Tamil', sans-serif"
+    },
+    "styling": {
+      "h1": "text-5xl sm:text-6xl+ font-black tracking-tight drop-shadow-[0_0_15px_rgba(255,157,0,0.8)]",
+      "h2": "text-3xl sm:text-4xl font-bold tracking-tight text-white",
+      "h3": "text-2xl font-bold text-white",
+      "body": "text-base leading-relaxed text-zinc-300",
+      "accent_labels": "text-xs font-bold uppercase tracking-[0.2em] text-orange-500"
+    }
+  },
+  "layout_and_spacing": {
+    "philosophy": "Generous Spacing (p-8 to p-24), high contrast borders.",
+    "grid_modes": {
+      "features": "Bento Grid (Tetris Mode) - gap-8, mixing col-span-4 and col-span-8 for planets and constellations.",
+      "timeline": "Vertical centered line with alternating left/right glass cards, sticky scrolling.",
+      "astrology": "Control Room Grid (Dense) - grid-cols-1 md:grid-cols-2 gap-6 for input forms and result displays."
+    },
+    "hero_section": "Fullscreen (min-h-screen) with background video, overlay bg-black/60 to ensure text legibility. Large 'MJ' brand text centered."
+  },
+  "surfaces_and_components": {
+    "cards": "Glassmorphism (Crystal variant). bg-white/5, backdrop-blur-xl, border border-white/10. Hover: border-orange-500/50 shadow-[0_0_20px_rgba(255,157,0,0.2)].",
+    "buttons": "Primary: bg-orange-600 hover:bg-orange-500 text-white rounded-md transition-all shadow-[0_0_10px_rgba(255,157,0,0.4)]. Secondary: bg-white/10 hover:bg-white/20 text-white border border-white/20.",
+    "astrology_form": "Shadcn UI forms customized with dark glass backgrounds, orange focus rings (focus:ring-orange-500 focus:border-orange-500).",
+    "timeline_nodes": "Glowing orange dots with white/10 vertical line connecting them."
+  },
+  "motion_and_effects": {
+    "backgrounds": "Use CSS or Canvas based animated starfield on absolute positioned layer behind content (no Three.js as requested).",
+    "scroll": "Use Framer Motion for staggered fade-up and parallax effects on Space Events and Timeline cards.",
+    "microinteractions": "Hover states on cards translate-y-[-4px] and increase neon border opacity."
+  },
+  "media_assets": {
+    "hero_video": {
+      "url": "https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4",
+      "description": "Background loop for hero section"
+    },
+    "hero_dust_overlay": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/c5d8a91a-ec18-4f3a-9ccd-e978a3b6b881/images/6104296b8491b2bf40949b2174766f9a10860484dffa6a379542f6849e2fec1e.png",
+      "description": "Overlay texture to add richness to the hero space vibe"
+    },
+    "astrology_mandala": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/c5d8a91a-ec18-4f3a-9ccd-e978a3b6b881/images/bf2cd0de6c53df77024e0a135407c434945621808834499ab64d66184a265c25.png",
+      "description": "Background/accent graphic for the Tamil Vedic Astrology Calculator section"
+    },
+    "gallery_stars": [
+      "https://images.pexels.com/photos/31510914/pexels-photo-31510914.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "https://images.pexels.com/photos/10574859/pexels-photo-10574859.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "https://images.unsplash.com/photo-1707587537172-8f1b0c70abcd?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTJ8MHwxfHNlYXJjaHwzfHxOQVNBJTIwc3BhY2UlMjBnYWxheHklMjBzdGFyc3xlbnwwfHx8fDE3NzQ5Njg1MDR8MA&ixlib=rb-4.1.0&q=85"
+    ],
+    "missions_rockets": [
+      "https://images.unsplash.com/photo-1767730347428-620fff2e9e7b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTB8MHwxfHNlYXJjaHw0fHxyb2NrZXQlMjBsYXVuY2glMjBzcGFjZSUyMG1pc3Npb258ZW58MHx8fHwxNzc0OTY4NTA0fDA&ixlib=rb-4.1.0&q=85",
+      "https://images.unsplash.com/photo-1762135245629-1e79d4cc30b3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTB8MHwxfHNlYXJjaHwyfHxyb2NrZXQlMjBsYXVuY2glMjBzcGFjZSUyMG1pc3Npb258ZW58MHx8fHwxNzc0OTY4NTA0fDA&ixlib=rb-4.1.0&q=85",
+      "https://images.unsplash.com/photo-1767730347409-990339672312?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTB8MHwxfHNlYXJjaHwzfHxyb2NrZXQlMjBsYXVuY2glMjBzcGFjZSUyMG1pc3Npb258ZW58MHx8fHwxNzc0OTY4NTA0fDA&ixlib=rb-4.1.0&q=85"
+    ],
+    "planets": [
+      "https://images.pexels.com/photos/12498925/pexels-photo-12498925.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "https://images.unsplash.com/photo-1708257106556-c7a27af25a06?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwzfHxzb2xhciUyMHN5c3RlbSUyMHBsYW5ldCUyMG1vb258ZW58MHx8fHwxNzc0OTY4NTA0fDA&ixlib=rb-4.1.0&q=85",
+      "https://images.unsplash.com/photo-1582815386453-c3817e93e745?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwxfHxzb2xhciUyMHN5c3RlbSUyMHBsYW5ldCUyMG1vb258ZW58MHx8fHwxNzc0OTY4NTA0fDA&ixlib=rb-4.1.0&q=85",
+      "https://images.pexels.com/photos/30596280/pexels-photo-30596280.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    ]
+  },
+  "testing": {
+    "attributes": "All interactive elements MUST include data-testid. Examples: data-testid='astrology-submit-btn', data-testid='nav-home-link', data-testid='timeline-event-card'."
+  },
+  "instructions_to_main_agent": [
+    "Install and configure Google Fonts for 'Arima Madurai' and 'Noto Sans Tamil' in your global css or index.html.",
+    "Implement the animated CSS/Canvas starfield as a fixed background covering the viewport (z-index: -1).",
+    "Hero section: Use the provided mixkit mp4 video URL for the fullscreen background loop, mute it, auto-play, and apply a black semi-transparent overlay (bg-black/50) so text is readable.",
+    "Apply Archetype 5 (Jewel & Luxury) using deep black backgrounds (#030303) and glassmorphic UI elements (bg-white/5, backdrop-blur-xl).",
+    "Incorporate orange/gold neon highlights as per the design guidelines for titles, borders, and button hovers.",
+    "Use framer-motion for scrolling staggered animations, especially in the interactive timeline and gallery bento grid.",
+    "Tamil wording MUST be prominent (primary language).",
+    "Do NOT use Three.js for the starfield; strictly use CSS or Canvas API to keep it performant and aligned with user constraints.",
+    "Utilize lucide-react for iconography. Install necessary Shadcn components (card, input, button) and override their default white styles to match the dark glassmorphic theme.",
+    "Ensure all interactive UI elements have data-testid attributes for testing."
+  ]
+}
