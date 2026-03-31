@@ -109,31 +109,31 @@ ASTRONOMY_OBJECTS = [
 ]
 
 TIMELINE_EVENTS = [
-    {"year":-200,"title_tamil":"பண்டைய தமிழ் வானியல்","title_english":"Ancient Tamil Astronomy","description_tamil":"பண்டைய தமிழர்கள் நட்சத்திரங்களை 27 நட்சத்திரங்களாக வகைப்படுத்தினர். புறநானூறு மற்றும் சங்க இலக்கியங்கள் வானியல் அறிவை பதிவு செய்கின்றன.","type":"past","category":"வரலாறு","icon":"📜"},
-    {"year":500,"title_tamil":"ஆர்யபட்டாவின் கண்டுபிடிப்புகள்","title_english":"Aryabhata's Discoveries","description_tamil":"ஆர்யபட்டா பூமி தன்னைத்தானே சுழல்கிறது என்றும் நிலவு சூரிய ஒளியை பிரதிபலிக்கிறது என்றும் கண்டுபிடித்தார். ஆர்யபட்டீயம் என்ற நூலில் பல வானியல் கணக்குகள்.","type":"past","category":"விஞ்ஞானம்","icon":"🔭"},
-    {"year":1543,"title_tamil":"கோபர்னிக்கஸ் - சூரிய மையக் கோட்பாடு","title_english":"Copernicus Heliocentric Model","description_tamil":"நிக்கோலஸ் கோபர்னிக்கஸ் சூரியன் பிரபஞ்சத்தின் மையம் என்ற கோட்பாட்டை வெளியிட்டார். இது வானியல் வரலாற்றில் புரட்சிகரமான மாற்றம்.","type":"past","category":"விஞ்ஞானம்","icon":"☀️"},
-    {"year":1609,"title_tamil":"கலீலியோவின் தொலைநோக்கி","title_english":"Galileo's Telescope","description_tamil":"கலீலியோ கலீலி தொலைநோக்கியை வானியலுக்கு பயன்படுத்தி வியாழனின் சந்திரன்களையும் சனியின் வளையங்களையும் கண்டுபிடித்தார்.","type":"past","category":"கண்டுபிடிப்பு","icon":"🔭"},
-    {"year":1687,"title_tamil":"நியூட்டனின் புவியீர்ப்பு விதி","title_english":"Newton's Law of Gravitation","description_tamil":"ஐசக் நியூட்டன் புவியீர்ப்பு விதியை வெளியிட்டார். இது கோள்களின் இயக்கத்தை விளக்கி வானியலை புரட்சிகரமாக்கியது.","type":"past","category":"விஞ்ஞானம்","icon":"🍎"},
-    {"year":1915,"title_tamil":"ஐன்ஸ்டீனின் ஒப்பியல் கோட்பாடு","title_english":"Einstein's General Relativity","description_tamil":"ஆல்பர்ட் ஐன்ஸ்டீன் பொது ஒப்பியல் கோட்பாட்டை வெளியிட்டார். இது விண்வெளி, நேரம் மற்றும் புவியீர்ப்பு பற்றிய நமது புரிதலை மாற்றியது.","type":"past","category":"விஞ்ஞானம்","icon":"🌌"},
-    {"year":1957,"title_tamil":"ஸ்புட்னிக்-1 - விண்வெளி யுகம் தொடக்கம்","title_english":"Sputnik-1: Space Age Begins","description_tamil":"உலகின் முதல் செயற்கைக்கோள் ஸ்புட்னிக்-1 விண்ணில் ஏவப்பட்டது. விண்வெளி போட்டியின் தொடக்கம்.","type":"past","category":"விண்வெளி","icon":"🛸"},
-    {"year":1961,"title_tamil":"யூரி கெகாரின் - முதல் மனிதன்","title_english":"Yuri Gagarin - First Human","description_tamil":"யூரி கெகாரின் முதல் மனிதனாக விண்வெளி சென்று திரும்பினார். 108 நிமிட வரலாற்று பயணம்.","type":"past","category":"மனித விண்வெளி","icon":"👨‍🚀"},
-    {"year":1969,"title_tamil":"ஆபோலோ-11 - நிலவு சாதனை","title_english":"Apollo 11 Moon Landing","description_tamil":"மனிதன் முதல் முறையாக நிலவில் காலடி வைத்தான். நீல் ஆம்ஸ்ட்ராங்கின் வரலாற்று வாக்கியம்.","type":"past","category":"நிலவு","icon":"🌙"},
-    {"year":1975,"title_tamil":"ஆர்யபட்டா - இந்தியாவின் முதல் செயற்கைக்கோள்","title_english":"Aryabhata - India's First Satellite","description_tamil":"இந்தியா விண்வெளி யுகத்தில் நுழைந்தது. ISRO-வின் பயணம் தொடங்கியது.","type":"past","category":"இந்தியா","icon":"🇮🇳"},
-    {"year":1984,"title_tamil":"ராக்கேஷ் ஷர்மா - விண்வெளியில் இந்தியர்","title_english":"Rakesh Sharma in Space","description_tamil":"முதல் இந்திய விண்வெளி வீரர் ராக்கேஷ் ஷர்மா விண்வெளியிலிருந்து 'சாரே ஜஹாந் சே அச்சா' பாடினார்.","type":"past","category":"இந்தியா","icon":"🚀"},
-    {"year":1990,"title_tamil":"ஹப்பிள் தொலைநோக்கி","title_english":"Hubble Space Telescope","description_tamil":"பிரபஞ்சத்தின் ஆழத்தை திறந்த ஹப்பிள் தொலைநோக்கி ஏவப்பட்டது. 1.5 மில்லியன் படங்களை எடுத்துள்ளது.","type":"past","category":"தொலைநோக்கி","icon":"🔭"},
-    {"year":2008,"title_tamil":"சந்திரயான்-1","title_english":"Chandrayaan-1","description_tamil":"இந்தியாவின் முதல் நிலவு ஆய்வு திட்டம். நிலவில் நீர் இருப்பதை கண்டுபிடித்தது.","type":"past","category":"இந்தியா","icon":"🌙"},
-    {"year":2014,"title_tamil":"மங்கள்யான்","title_english":"Mangalyaan (MOM)","description_tamil":"இந்தியா முதல் முயற்சியிலேயே செவ்வாயை அடைந்தது. ஆசியாவின் முதல் செவ்வாய் ஆய்வு.","type":"past","category":"இந்தியா","icon":"🔴"},
-    {"year":2021,"title_tamil":"ஜேம்ஸ் வெப் தொலைநோக்கி","title_english":"James Webb Space Telescope","description_tamil":"$10 பில்லியன் மதிப்புள்ள JWST ஏவப்பட்டது. பிரபஞ்சத்தின் ஆரம்பகால படங்கள் கிடைத்தன.","type":"past","category":"தொலைநோக்கி","icon":"🌌"},
-    {"year":2023,"title_tamil":"சந்திரயான்-3 வெற்றி","title_english":"Chandrayaan-3 Success","description_tamil":"இந்தியா நிலவின் தென் துருவத்தில் முதல் நாடாக தரையிறங்கியது. சல்ஃபர் கண்டுபிடிப்பு.","type":"past","category":"இந்தியா","icon":"🏆"},
-    {"year":2023,"title_tamil":"ஆதித்யா-எல்1 ஏவுதல்","title_english":"Aditya-L1 Launch","description_tamil":"இந்தியாவின் முதல் சூரிய ஆய்வு விண்கலம் வெற்றிகரமாக ஏவப்பட்டது.","type":"present","category":"இந்தியா","icon":"☀️"},
-    {"year":2025,"title_tamil":"ககன்யான் - இந்திய விண்வெளி வீரர்கள்","title_english":"Gaganyaan Mission","description_tamil":"இந்திய விண்வெளி வீரர்கள் முதன்முறையாக ISRO ஏவுகணையில் விண்வெளி செல்வர்.","type":"future","category":"இந்தியா","icon":"🚀"},
-    {"year":2026,"title_tamil":"ஆர்டெமிஸ்-3 நிலவில்","title_english":"Artemis III Moon Landing","description_tamil":"முதல் பெண் நிலவில் காலடி வைப்பார். 52 ஆண்டுகளுக்கு பிறகு மனிதன் நிலவில்.","type":"future","category":"நிலவு","icon":"👩‍🚀"},
-    {"year":2028,"title_tamil":"சந்திரயான்-4","title_english":"Chandrayaan-4","description_tamil":"நிலவிலிருந்து மண் மாதிரிகள் பூமிக்கு திரும்பும். இஸ்ரோவின் தொழில்நுட்ப முன்னேற்றம்.","type":"future","category":"இந்தியா","icon":"🌙"},
-    {"year":2028,"title_tamil":"சுக்ரயான் - வெள்ளி","title_english":"Shukrayaan - Venus","description_tamil":"இஸ்ரோவின் வெள்ளி ஆய்வு திட்டம் வெள்ளியின் வளிமண்டலத்தை ஆய்வு செய்யும்.","type":"future","category":"இந்தியா","icon":"⭐"},
-    {"year":2030,"title_tamil":"செவ்வாய் மாதிரி திரும்பல்","title_english":"Mars Sample Return","description_tamil":"பெர்செவரன்ஸ் சேகரித்த செவ்வாய் பாறை மாதிரிகள் பூமிக்கு வரும். வரலாற்று சாதனை.","type":"future","category":"செவ்வாய்","icon":"🔴"},
-    {"year":2031,"title_tamil":"JUICE - வியாழன் சந்திரன்கள்","title_english":"JUICE at Jupiter","description_tamil":"ESA-வின் JUICE வியாழனின் பனிக்கட்டி சந்திரன்களை ஆய்வு செய்யும்.","type":"future","category":"கோள் ஆய்வு","icon":"🪐"},
-    {"year":2035,"title_tamil":"இந்திய விண்வெளி நிலையம்","title_english":"Indian Space Station","description_tamil":"இஸ்ரோ தனது விண்வெளி நிலையத்தை நிறுவும். இந்தியாவின் தொழில்நுட்ப உச்சி.","type":"future","category":"இந்தியா","icon":"🛸"},
-    {"year":2037,"title_tamil":"மனிதன் செவ்வாயில்","title_english":"Humans on Mars","description_tamil":"முதல் மனிதர்கள் செவ்வாயில் காலடி வைப்பர். மனிதகுலத்தின் மிகப்பெரிய பயணம்.","type":"future","category":"மனித விண்வெளி","icon":"🚀"},
+    {"year":-200,"title_tamil":"பண்டைய தமிழ் வானியல்","title_english":"Ancient Tamil Astronomy","description_tamil":"பண்டைய தமிழர்கள் நட்சத்திரங்களை 27 நட்சத்திரங்களாக வகைப்படுத்தினர். புறநானூறு மற்றும் சங்க இலக்கியங்கள் வானியல் அறிவை பதிவு செய்கின்றன.","type":"past","category":"வரலாறு"},
+    {"year":500,"title_tamil":"ஆர்யபட்டாவின் கண்டுபிடிப்புகள்","title_english":"Aryabhata's Discoveries","description_tamil":"ஆர்யபட்டா பூமி தன்னைத்தானே சுழல்கிறது என்றும் நிலவு சூரிய ஒளியை பிரதிபலிக்கிறது என்றும் கண்டுபிடித்தார். ஆர்யபட்டீயம் என்ற நூலில் பல வானியல் கணக்குகள்.","type":"past","category":"விஞ்ஞானம்"},
+    {"year":1543,"title_tamil":"கோபர்னிக்கஸ் - சூரிய மையக் கோட்பாடு","title_english":"Copernicus Heliocentric Model","description_tamil":"நிக்கோலஸ் கோபர்னிக்கஸ் சூரியன் பிரபஞ்சத்தின் மையம் என்ற கோட்பாட்டை வெளியிட்டார். இது வானியல் வரலாற்றில் புரட்சிகரமான மாற்றம்.","type":"past","category":"விஞ்ஞானம்"},
+    {"year":1609,"title_tamil":"கலீலியோவின் தொலைநோக்கி","title_english":"Galileo's Telescope","description_tamil":"கலீலியோ கலீலி தொலைநோக்கியை வானியலுக்கு பயன்படுத்தி வியாழனின் சந்திரன்களையும் சனியின் வளையங்களையும் கண்டுபிடித்தார்.","type":"past","category":"கண்டுபிடிப்பு"},
+    {"year":1687,"title_tamil":"நியூட்டனின் புவியீர்ப்பு விதி","title_english":"Newton's Law of Gravitation","description_tamil":"ஐசக் நியூட்டன் புவியீர்ப்பு விதியை வெளியிட்டார். இது கோள்களின் இயக்கத்தை விளக்கி வானியலை புரட்சிகரமாக்கியது.","type":"past","category":"விஞ்ஞானம்"},
+    {"year":1915,"title_tamil":"ஐன்ஸ்டீனின் ஒப்பியல் கோட்பாடு","title_english":"Einstein's General Relativity","description_tamil":"ஆல்பர்ட் ஐன்ஸ்டீன் பொது ஒப்பியல் கோட்பாட்டை வெளியிட்டார். இது விண்வெளி, நேரம் மற்றும் புவியீர்ப்பு பற்றிய நமது புரிதலை மாற்றியது.","type":"past","category":"விஞ்ஞானம்"},
+    {"year":1957,"title_tamil":"ஸ்புட்னிக்-1 - விண்வெளி யுகம் தொடக்கம்","title_english":"Sputnik-1: Space Age Begins","description_tamil":"உலகின் முதல் செயற்கைக்கோள் ஸ்புட்னிக்-1 விண்ணில் ஏவப்பட்டது. விண்வெளி போட்டியின் தொடக்கம்.","type":"past","category":"விண்வெளி"},
+    {"year":1961,"title_tamil":"யூரி கெகாரின் - முதல் மனிதன்","title_english":"Yuri Gagarin - First Human","description_tamil":"யூரி கெகாரின் முதல் மனிதனாக விண்வெளி சென்று திரும்பினார். 108 நிமிட வரலாற்று பயணம்.","type":"past","category":"மனித விண்வெளி"},
+    {"year":1969,"title_tamil":"ஆபோலோ-11 - நிலவு சாதனை","title_english":"Apollo 11 Moon Landing","description_tamil":"மனிதன் முதல் முறையாக நிலவில் காலடி வைத்தான். நீல் ஆம்ஸ்ட்ராங்கின் வரலாற்று வாக்கியம்.","type":"past","category":"நிலவு"},
+    {"year":1975,"title_tamil":"ஆர்யபட்டா - இந்தியாவின் முதல் செயற்கைக்கோள்","title_english":"Aryabhata - India's First Satellite","description_tamil":"இந்தியா விண்வெளி யுகத்தில் நுழைந்தது. ISRO-வின் பயணம் தொடங்கியது.","type":"past","category":"இந்தியா"},
+    {"year":1984,"title_tamil":"ராக்கேஷ் ஷர்மா - விண்வெளியில் இந்தியர்","title_english":"Rakesh Sharma in Space","description_tamil":"முதல் இந்திய விண்வெளி வீரர் ராக்கேஷ் ஷர்மா விண்வெளியிலிருந்து 'சாரே ஜஹாந் சே அச்சா' பாடினார்.","type":"past","category":"இந்தியா"},
+    {"year":1990,"title_tamil":"ஹப்பிள் தொலைநோக்கி","title_english":"Hubble Space Telescope","description_tamil":"பிரபஞ்சத்தின் ஆழத்தை திறந்த ஹப்பிள் தொலைநோக்கி ஏவப்பட்டது. 1.5 மில்லியன் படங்களை எடுத்துள்ளது.","type":"past","category":"தொலைநோக்கி"},
+    {"year":2008,"title_tamil":"சந்திரயான்-1","title_english":"Chandrayaan-1","description_tamil":"இந்தியாவின் முதல் நிலவு ஆய்வு திட்டம். நிலவில் நீர் இருப்பதை கண்டுபிடித்தது.","type":"past","category":"இந்தியா"},
+    {"year":2014,"title_tamil":"மங்கள்யான்","title_english":"Mangalyaan (MOM)","description_tamil":"இந்தியா முதல் முயற்சியிலேயே செவ்வாயை அடைந்தது. ஆசியாவின் முதல் செவ்வாய் ஆய்வு.","type":"past","category":"இந்தியா"},
+    {"year":2021,"title_tamil":"ஜேம்ஸ் வெப் தொலைநோக்கி","title_english":"James Webb Space Telescope","description_tamil":"$10 பில்லியன் மதிப்புள்ள JWST ஏவப்பட்டது. பிரபஞ்சத்தின் ஆரம்பகால படங்கள் கிடைத்தன.","type":"past","category":"தொலைநோக்கி"},
+    {"year":2023,"title_tamil":"சந்திரயான்-3 வெற்றி","title_english":"Chandrayaan-3 Success","description_tamil":"இந்தியா நிலவின் தென் துருவத்தில் முதல் நாடாக தரையிறங்கியது. சல்ஃபர் கண்டுபிடிப்பு.","type":"past","category":"இந்தியா"},
+    {"year":2023,"title_tamil":"ஆதித்யா-எல்1 ஏவுதல்","title_english":"Aditya-L1 Launch","description_tamil":"இந்தியாவின் முதல் சூரிய ஆய்வு விண்கலம் வெற்றிகரமாக ஏவப்பட்டது.","type":"present","category":"இந்தியா"},
+    {"year":2025,"title_tamil":"ககன்யான் - இந்திய விண்வெளி வீரர்கள்","title_english":"Gaganyaan Mission","description_tamil":"இந்திய விண்வெளி வீரர்கள் முதன்முறையாக ISRO ஏவுகணையில் விண்வெளி செல்வர்.","type":"future","category":"இந்தியா"},
+    {"year":2026,"title_tamil":"ஆர்டெமிஸ்-3 நிலவில்","title_english":"Artemis III Moon Landing","description_tamil":"முதல் பெண் நிலவில் காலடி வைப்பார். 52 ஆண்டுகளுக்கு பிறகு மனிதன் நிலவில்.","type":"future","category":"நிலவு"},
+    {"year":2028,"title_tamil":"சந்திரயான்-4","title_english":"Chandrayaan-4","description_tamil":"நிலவிலிருந்து மண் மாதிரிகள் பூமிக்கு திரும்பும். இஸ்ரோவின் தொழில்நுட்ப முன்னேற்றம்.","type":"future","category":"இந்தியா"},
+    {"year":2028,"title_tamil":"சுக்ரயான் - வெள்ளி","title_english":"Shukrayaan - Venus","description_tamil":"இஸ்ரோவின் வெள்ளி ஆய்வு திட்டம் வெள்ளியின் வளிமண்டலத்தை ஆய்வு செய்யும்.","type":"future","category":"இந்தியா"},
+    {"year":2030,"title_tamil":"செவ்வாய் மாதிரி திரும்பல்","title_english":"Mars Sample Return","description_tamil":"பெர்செவரன்ஸ் சேகரித்த செவ்வாய் பாறை மாதிரிகள் பூமிக்கு வரும். வரலாற்று சாதனை.","type":"future","category":"செவ்வாய்"},
+    {"year":2031,"title_tamil":"JUICE - வியாழன் சந்திரன்கள்","title_english":"JUICE at Jupiter","description_tamil":"ESA-வின் JUICE வியாழனின் பனிக்கட்டி சந்திரன்களை ஆய்வு செய்யும்.","type":"future","category":"கோள் ஆய்வு"},
+    {"year":2035,"title_tamil":"இந்திய விண்வெளி நிலையம்","title_english":"Indian Space Station","description_tamil":"இஸ்ரோ தனது விண்வெளி நிலையத்தை நிறுவும். இந்தியாவின் தொழில்நுட்ப உச்சி.","type":"future","category":"இந்தியா"},
+    {"year":2037,"title_tamil":"மனிதன் செவ்வாயில்","title_english":"Humans on Mars","description_tamil":"முதல் மனிதர்கள் செவ்வாயில் காலடி வைப்பர். மனிதகுலத்தின் மிகப்பெரிய பயணம்.","type":"future","category":"மனித விண்வெளி"},
 ]
 
 GALLERY_ITEMS = [
@@ -387,6 +387,10 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup():
     await seed_db()
+    try:
+        await db.timeline_events.update_many({}, {"$unset": {"icon": ""}})
+    except Exception:
+        pass
 
 @app.on_event("shutdown")
 async def shutdown():

@@ -198,8 +198,10 @@ const AstrologyCalculator = () => {
             {!result ? (
               <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 style={{ minHeight: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px', background: 'rgba(255,255,255,0.015)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '40px', textAlign: 'center' }}>
-                <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(255,157,0,0.06)', border: '1px solid rgba(255,157,0,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ fontSize: '32px' }}>&#9800;</span>
+              <div style={{ width: '72px', height: '72px', borderRadius: '50%', background: 'rgba(255,157,0,0.06)', border: '1px solid rgba(255,157,0,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', border: '2px solid rgba(255,157,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'rgba(255,157,0,0.6)' }} />
+                  </div>
                 </div>
                 <p style={{ color: 'rgba(255,255,255,0.3)', fontFamily: "'Noto Sans Tamil',sans-serif", fontSize: '14px' }}>பிறப்பு விவரங்களை உள்ளீடு செய்யுங்கள்</p>
               </motion.div>
